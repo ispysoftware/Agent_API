@@ -6,15 +6,15 @@ info:
     \ This interface uses the default API endpoint of http://localhost:8090. You will need Agent DVR installed and running to use it."
   version: "1.0.5"
   title: 'Agent DVR'
-  version: 4.4.5.0
+  version: "4.4.5.0"
   termsOfService: "https://www.ispyconnect.com/terms.aspx"
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: localhost:8090
-basePath: /
+host: "localhost:8090"
+basePath: "/"
 consumes:
-    - application/json
+    - "application/json"
 definitions:
     Alert:
         properties:
