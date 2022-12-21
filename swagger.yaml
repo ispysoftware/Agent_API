@@ -4,7 +4,6 @@ info:
   description: "This is the full local API for Agent DVR.  You can find out more about\
     \ AgentDVR at [https://www.ispyconnect.com](https://www.ispyconnect.com)\
     \ This interface uses the default API endpoint of http://localhost:8090. You will need Agent DVR installed and running to use it."
-  version: "1.0.5"
   title: 'Agent DVR'
   version: "4.4.5.0"
   termsOfService: "https://www.ispyconnect.com/terms.aspx"
