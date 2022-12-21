@@ -239,15 +239,15 @@ paths:
                     description: Arm the system.
             tags: 
             - Commands
-    /command/blockexternal:
+    /command/blockExternal:
         get:
-            summary: blockexternal
-            operationId: /command/blockexternal
+            summary: Block external access to the system.
+            operationId: /command/blockExternal
             produces:
                 - application/json
             responses:
                 "200":
-                    description: blockexternal
+                    description: Block external access to the system.
             tags: 
             - Commands
     /command/cloudPhotosOff:
@@ -749,15 +749,15 @@ paths:
                     description: rtmpStop
             tags: 
             - Commands
-    /command/runstoragemgmt:
+    /command/runStorageMgmt:
         get:
-            summary: runstoragemgmt
-            operationId: /command/runstoragemgmt
+            summary: Run storage management.
+            operationId: /command/runStorageMgmt
             produces:
                 - application/json
             responses:
                 "200":
-                    description: runstoragemgmt
+                    description: Run storage management.
             tags: 
             - Commands
     /command/saveLocalOff:
@@ -942,15 +942,15 @@ paths:
                     description: Switch on the device.
             tags: 
             - Commands
-    /command/unblockexternal:
+    /command/unblockExternal:
         get:
-            summary: unblockexternal
-            operationId: /command/unblockexternal
+            summary: Unblock external access to the system.
+            operationId: /command/unblockExternal
             produces:
                 - application/json
             responses:
                 "200":
-                    description: unblockexternal
+                    description: Unblock external access to the system.
             tags: 
             - Commands
     /events.json:
@@ -1026,10 +1026,10 @@ paths:
                     description: Returns a still image for the specified object(s)
             tags: 
             - Media
-    /grabimage.jpg:
+    /grabImage.jpg:
         get:
             summary: Returns a full size image for the specified object and filename
-            operationId: grabimage.jpg
+            operationId: grabImage.jpg
             parameters:
             - description: Object ID
               in: query
@@ -1048,10 +1048,10 @@ paths:
                     description: Returns a full size image for the specified object and filename
             tags: 
             - Media
-    /grabthumb.jpg:
+    /grabThumb.jpg:
         get:
             summary: Returns a thumbnail image for the specified object and filename
-            operationId: grabthumb.jpg
+            operationId: grabThumb.jpg
             parameters:
             - description: Object ID
               in: query
@@ -1147,10 +1147,10 @@ paths:
                   description: OK
             tags: 
             - Query
-    /q/getsessioncount:
+    /q/getSessionCount:
         get:
-            summary: getsessioncount
-            operationId: /q/getsessioncount
+            summary: Returns the number of active sessions.
+            operationId: /q/getSessionCount
             produces:
                 - application/json
             responses:
@@ -1158,21 +1158,21 @@ paths:
                   description: OK
             tags: 
             - Queries
-    /q/getstreamingstatus:
+    /q/getStreamingStatus:
         get:
-            summary: plagetstreamingstatus
-            operationId: /q/getstreamingstatus
+            summary: Get a JSON list of configured RTMP servers (with status). This provides an ident field you use in subsequent requests.
+            operationId: /q/getStreamingStatus
             produces:
                 - application/json
             responses:
                 "200":
-                  description: OK
+                  description: Get a JSON list of configured RTMP servers (with status). This provides an ident field you use in subsequent requests.
             tags: 
             - Queries
-    /streamfile:
+    /streamFile:
         get:
             summary: Stream the file to the caller
-            operationId: streamfile
+            operationId: /streamFile
             parameters:
             - description: Object ID
               in: query
