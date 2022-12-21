@@ -95,75 +95,81 @@ paths:
                     description: Returns live audio from the specified microphone in ogg format
             tags: 
             - Audio
-    /command.json:
+    /command/alert:
         get:
-            description: Commands
-            operationId: command.json
+            summary: Trigger alert on the device.
+            operationId: /command/alert
             parameters:
-            - description: Command
-              enum:
-                - alert
-                - alertOff
-                - alertOn
-                - allOff
-                - allOn
-                - applySchedule
-                - applyScheduleToDevice
-                - arm
-                - blockexternal
-                - cloudPhotosOff
-                - cloudPhotosOn
-                - cloudRecordingsOff
-                - cloudRecordingsOn
-                - detect
-                - disArm
-                - ftpframe
-                - ftpPhotosOff
-                - ftpPhotosOn
-                - ftpRecordingsOff
-                - ftpRecordingsOn
-                - getObject
-                - getObjects
-                - getProfiles
-                - getStatus
-                - ping
-                - record
-                - recordingOff
-                - recordOnAlertOn
-                - recordOnDetectOn
-                - recordStop
-                - reloadConfig
-                - reloadObjects
-                - restart
-                - rtmpStop
-                - runstoragemgmt
-                - saveLocalOff
-                - saveLocalOn
-                - scheduleOff
-                - scheduleOn
-                - setdeepstackurl
-                - setProfile
-                - seturi
-                - snapshot
-                - stopCloudUploads
-                - switchOff
-                - switchOn
-                - triggerface
-                - triggerlpr
-                - triggerobject
-                - triggertask
-                - unblockexternal
+            - description: Object ID
               in: query
-              name: cmd
+              name: oid
               required: true
-              type: string
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
             produces:
                 - application/json
             responses:
                 "200":
-                  description: OK
+                    description: alert
             tags: 
-            - Command
+            - Commands
+    /command/alertOff:
+        get:
+            summary: Turn alerts off for the device.
+            operationId: /command/alertOff
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn alerts off for the device.
+            tags: 
+            - Commands
+    /command/alertOn:
+        get:
+            summary: Turn alerts on for the device.
+            operationId: /command/alertOn
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn alerts on for the device.
+            tags: 
+            - Commands
     /command/allOff:
         get:
             summary: allOff
@@ -188,24 +194,49 @@ paths:
             - Commands
     /command/applySchedule:
         get:
-            summary: applySchedule
+            summary: Apply schedule to all devices.
             operationId: /command/applySchedule
             produces:
                 - application/json
             responses:
                 "200":
-                    description: applySchedule
+                    description: Apply schedule to all devices.
+            tags: 
+            - Commands
+    /command/applyScheduleToDevice:
+        get:
+            summary: Apply schedule to device.
+            operationId: /command/applyScheduleToDevice
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Apply schedule to device.
             tags: 
             - Commands
     /command/arm:
         get:
-            summary: arm
+            summary: Arm the system.
             operationId: /command/arm
             produces:
                 - application/json
             responses:
                 "200":
-                    description: arm
+                    description: Arm the system.
             tags: 
             - Commands
     /command/blockexternal:
@@ -219,15 +250,290 @@ paths:
                     description: blockexternal
             tags: 
             - Commands
-    /command/disArm:
+    /command/cloudPhotosOff:
         get:
-            summary: disArm
-            operationId: /command/disArm
+            summary: Turn cloud photos off for the device.
+            operationId: /command/cloudPhotosOff
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
             produces:
                 - application/json
             responses:
                 "200":
-                    description: disArm
+                    description: Turn cloud photos off for the device.
+            tags: 
+            - Commands
+    /command/cloudPhotosOn:
+        get:
+            summary: Turn cloud photos on for the device.
+            operationId: /command/cloudPhotosOn
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn cloud photos on for the device.
+            tags: 
+            - Commands
+    /command/cloudRecordingsOff:
+        get:
+            summary: Turn cloud recordings off for the device.
+            operationId: /command/cloudRecordingsOff
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn cloud recordings off for the device.
+            tags: 
+            - Commands
+    /command/cloudRecordingsOn:
+        get:
+            summary: Turn cloud recordings on for the device.
+            operationId: /command/cloudRecordingsOn
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn cloud recordings on for the device.
+            tags: 
+            - Commands
+    /command/detect:
+        get:
+            summary: Trigger detection for the device.
+            operationId: /command/detect
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Trigger detection for the device.
+            tags: 
+            - Commands
+    /command/disarm:
+        get:
+            summary: Disarm the system.
+            operationId: /command/disarm
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Disarm the system.
+            tags: 
+            - Commands
+    /command/ftpFrame:
+        get:
+            summary: Send a live frame via FTP.
+            operationId: /command/ftpFrame
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Send a live frame via FTP.
+            tags: 
+            - Commands
+    /command/ftpPhotosOff:
+        get:
+            summary: Turn FTP photos off for the device.
+            operationId: /command/ftpPhotosOff
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn FTP photos off for the device.
+            tags: 
+            - Commands
+    /command/ftpPhotosOn:
+        get:
+            summary: Turn FTP photos on for the device.
+            operationId: /command/ftpPhotosOn
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn FTP photos on for the device.
+            tags: 
+            - Commands
+    /command/ftpRecordingsOff:
+        get:
+            summary: Turn FTP recordings off for the device.
+            operationId: /command/ftpRecordingsOff
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn FTP recordings off for the device.
+            tags: 
+            - Commands
+    /command/ftpRecordingsOn:
+        get:
+            summary: Turn FTP recordings on for the device.
+            operationId: /command/ftpRecordingsOn
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn FTP recordings on for the device.
+            tags: 
+            - Commands
+    /command/getObject:
+        get:
+            summary: Get object by ID.
+            operationId: /command/getObject
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Get object by ID.
             tags: 
             - Commands
     /command/getObjects:
@@ -272,6 +578,131 @@ paths:
             responses:
                 "200":
                     description: ping
+            tags: 
+            - Commands
+    /command/record:
+        get:
+            summary: Start recording for the device.
+            operationId: /command/record
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Start recording for the device.
+            tags: 
+            - Commands
+    /command/recordStop:
+        get:
+            summary: Stop recording for the device.
+            operationId: /command/recordStop
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Stop recording for the device.
+            tags: 
+            - Commands
+    /command/recordingOff:
+        get:
+            summary: Turn recording off for the device.
+            operationId: /command/recordingOff
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn recording off for the device.
+            tags: 
+            - Commands
+    /command/recordOnAlertOn:
+        get:
+            summary: Turn record on alert on for the device.
+            operationId: /command/recordOnAlertOn
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn record on alert on for the device.
+            tags: 
+            - Commands
+    /command/recordOnDetectOn:
+        get:
+            summary: Turn record on detection on for the device.
+            operationId: /command/recordOnDetectOn
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn record on detection on for the device.
             tags: 
             - Commands
     /command/reloadConfig:
@@ -329,6 +760,127 @@ paths:
                     description: runstoragemgmt
             tags: 
             - Commands
+    /command/saveLocalOff:
+        get:
+            summary: Turn save local off for the device.
+            operationId: /command/saveLocalOff
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn save local off for the device.
+            tags: 
+            - Commands
+    /command/saveLocalOn:
+        get:
+            summary: Turn save local on for the device.
+            operationId: /command/saveLocalOn
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn save local on for the device.
+            tags: 
+            - Commands
+    /command/scheduleOff:
+        get:
+            summary: Turn schedule off for the device.
+            operationId: /command/scheduleOff
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn schedule off for the device.
+            tags: 
+            - Commands
+    /command/scheduleOn:
+        get:
+            summary: Turn schedule on for the device.
+            operationId: /command/scheduleOn
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn schedule on for the device.
+            tags: 
+            - Commands
+    /command/setProfile:
+        get:
+            summary: Apply the specified profile with an index.
+            operationId: /command/setProfile
+            parameters:
+            - description: Index (0=Home, 1=Away, 2=Night)
+              enum:
+              - 0
+              - 1
+              - 2
+              in: query
+              name: ind
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Apply the specified profile with an index.
+            tags: 
+            - Commands
     /command/stopCloudUploads:
         get:
             summary: stopCloudUploads
@@ -338,6 +890,56 @@ paths:
             responses:
                 "200":
                     description: stopCloudUploads
+            tags: 
+            - Commands
+    /command/switchOff:
+        get:
+            summary: Switch off the device.
+            operationId: /command/switchOff
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Switch off the device.
+            tags: 
+            - Commands
+    /command/switchOn:
+        get:
+            summary: Switch on the device.
+            operationId: /command/switchOn
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Switch on the device.
             tags: 
             - Commands
     /command/unblockexternal:
