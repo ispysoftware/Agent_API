@@ -881,6 +881,41 @@ paths:
                     description: Apply the specified profile with an index.
             tags: 
             - Commands
+    /command/setUri:
+        get:
+            summary: Modify the live and record uri's for a camera. You can provide live and/or record. The camera will restart.
+            operationId: /command/setUri
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            - description: Live URI (URL Encoded - http%3A%2F%2Fsomeurl.com%2Fvideo.asf%3Ffeed%3D1)
+              in: query
+              name: live
+              required: false
+              type: string
+            - description: Record URI (URL Encoded - http%3A%2F%2Fsomeurl.com%2Fvideo.asf%3Ffeed%3D1)
+              in: query
+              name: record
+              required: false
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Modify the live and record uri's for a camera. You can provide live and/or record. The camera will restart.
+            tags: 
+            - Commands
     /command/stopCloudUploads:
         get:
             summary: stopCloudUploads
