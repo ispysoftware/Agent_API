@@ -916,6 +916,31 @@ paths:
                     description: Modify the live and record uri's for a camera. You can provide live and/or record. The camera will restart.
             tags: 
             - Commands
+    /command/snapshot:
+        get:
+            summary: Save a photo/ grab/ snapshot of the camera.
+            operationId: /command/snapshot
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Save a photo/ grab/ snapshot of the camera.
+            tags: 
+            - Commands
     /command/stopCloudUploads:
         get:
             summary: stopCloudUploads
