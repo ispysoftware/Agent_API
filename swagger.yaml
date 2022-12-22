@@ -860,6 +860,31 @@ paths:
                     description: Turn schedule on for the device.
             tags: 
             - Commands
+    /command/setDeepStackUrl:
+        get:
+            summary: Set the deepstack URL for the device (omit the device for the default deepstack setting)
+            operationId: /command/setDeepStackUrl
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Set the deepstack URL for the device (omit the device for the default deepstack setting)
+            tags: 
+            - Commands
     /command/setProfile:
         get:
             summary: Apply the specified profile with an index.
