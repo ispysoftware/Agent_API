@@ -1052,6 +1052,59 @@ paths:
                     description: Trigger License Plate Recognition (LPR). LPR must be enabled on the camera for this to work.
             tags: 
             - Commands
+    /command/triggerObject:
+        get:
+            summary: Trigger DeepStack Object Recognition.
+            description: This will search the current frame for objects and if any of them match it will fire a DeepStack Object Found event. If not found it will fire a DeepStack Object Not Found event. Pass in labels to look for from the deepstack label list (comma seperated if more than one) and optionally a minimum confidence (0 - 100, default is 60), a snapshot flag to control whether to save an image with the results from the deepstack call, showlabels to control whether to draw labels on top of the image (v3.8.1.0+) and norepeat to stop Agent finding the same object in the previous calls locations. Object Recognition must be enabled on the camera for this to work.
+            operationId: /command/triggerObject
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            - description: Labels (car,person)
+              in: query
+              name: labels
+              required: true
+              type: string
+            - description: Confidence
+              in: query
+              name: confidence
+              required: false
+              type: integer
+              minimum: 0
+              maximum: 100
+            - description: Show Labels
+              in: query
+              name: showLabels
+              required: false
+              type: boolean
+            - description: Snapshot
+              in: query
+              name: snapshot
+              required: false
+              type: boolean
+            - description: No Repeat
+              in: query
+              name: noRepeat
+              required: false
+              type: boolean
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Trigger DeepStack Object Recognition.
+            tags: 
+            - Commands
     /command/unblockExternal:
         get:
             summary: Unblock external access to the system.
