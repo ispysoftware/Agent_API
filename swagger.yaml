@@ -860,6 +860,48 @@ paths:
                     description: Turn schedule on for the device.
             tags: 
             - Commands
+    /command/setObjectState:
+        get:
+            summary: Set the working state of the device.
+            description: "State Options:
+            \n None - disabled
+            \n Modect - enabled, record on detect (applies a simple detector if detector is None)
+            \n Monitor - enabled, no motion detection
+            \n Record - enabled, start recording, no motion detection (records until stopped)
+            \n Redect - enabled, start recording, motion detection enabled (records until no motion is detected, applies a simple detector if detector is None)"
+            operationId: /command/setObjectState
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            - description: State
+              enum:
+              - None
+              - Modect
+              - Monitor
+              - Record
+              - Redect
+              in: query
+              name: state
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Set the working state of the device.
+            tags: 
+            - Commands
     /command/setProfile:
         get:
             summary: Apply the specified profile with an index.
