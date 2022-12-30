@@ -1352,7 +1352,6 @@ paths:
             parameters:
             - description: Command
               enum:
-                - addcamera
                 - addonvif
                 - addrecording
                 - appendtimestamp
@@ -1362,8 +1361,6 @@ paths:
                 - disarmprofile
                 - getcameragrabs
                 - getevents
-                - getsessioncount
-                - getstreamingstatus
                 - recordRestart
                 - setsensitivity
                 - settimestamp
@@ -1382,6 +1379,85 @@ paths:
                   description: OK
             tags: 
             - Query
+    /q/addCamera:
+        get:
+            summary: Add a network camera.
+            operationId: /q/addCamera
+            parameters:
+            - description: Name (URL Encoded - camera%20name)
+              in: query
+              name: name
+              required: false
+              type: string
+            - description: Mainstream (URL Encoded - rtsp%3A%2F%2Fsomeurl.com%3A554%2Ffeed)
+              in: query
+              name: mainstream
+              required: false
+              type: string
+            - description: Substream (URL Encoded - rtsp%3A%2F%2Fsomeurl.com%3A554%2Ffeed)
+              in: query
+              name: substream
+              required: false
+              type: string
+            - description: Username
+              in: query
+              name: username
+              required: false
+              type: string
+            - description: Password
+              in: query
+              name: password
+              required: false
+              type: string
+            - description: Alerts
+              enum:
+              - 0
+              - 1
+              in: query
+              name: alerts
+              required: false
+              type: integer
+            - description: FPS
+              in: query
+              name: fps
+              required: false
+              type: integer
+            - description: Recording FPS
+              in: query
+              name: recfps
+              required: false
+              type: integer
+            - description: Raw
+              enum:
+              - 0
+              - 1
+              in: query
+              name: raw
+              required: false
+              type: integer
+            - description: Record
+              enum:
+              - 0
+              - 1
+              in: query
+              name: record
+              required: false
+              type: integer
+            - description: Resize
+              enum:
+              - 0
+              - 1
+              in: query
+              name: resize
+              required: false
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                  description: OK
+            tags: 
+            - Queries
     /q/getSessionCount:
         get:
             summary: Returns the number of active sessions.
