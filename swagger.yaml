@@ -5,7 +5,7 @@ info:
     \ AgentDVR at [https://www.ispyconnect.com](https://www.ispyconnect.com)\
     \ This interface uses the default API endpoint of http://localhost:8090. You will need Agent DVR installed and running to use it."
   title: 'Agent DVR'
-  version: "4.4.5.0"
+  version: "4.5.5.0"
   termsOfService: "https://www.ispyconnect.com/terms.aspx"
   license:
     name: "Apache 2.0"
@@ -953,6 +953,90 @@ paths:
                     description: Unblock external access to the system.
             tags: 
             - Commands
+	/command/actionOn:
+        get:
+            summary: Switches an action on
+            operationId: /command/actionOn
+			parameters:
+            - description: ID (from the Action configuration in the UI)
+              in: query
+              name: ID
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Switches an action on
+            tags: 
+            - Commands
+	/command/actionOff:
+        get:
+            summary: Switches an action off
+            operationId: /command/actionOn
+			parameters:
+            - description: ID (from the Action configuration in the UI)
+              in: query
+              name: ID
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Switches an action off
+            tags: 
+            - Commands
+	/command/actionRun:
+        get:
+            summary:  Executes an action (bypasses filtering)
+            operationId: /command/actionOn
+			parameters:
+            - description: ID (from the Action configuration in the UI)
+              in: query
+              name: ID
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Executes an action
+            tags: 
+            - Commands		
+	/command/switchDetector:
+        get:
+            summary: Switch the detector for the device on or off.
+            operationId: /command/switchDetector
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+			- description: On or Off
+              enum:
+              - true
+              - false
+              in: query
+              name: on
+              required: true
+              type: boolean
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Switches the detector on or off
+            tags: 
+            - Commands			
     /events.json:
         get:
             summary: Return a collection of event objects with details of the device events
@@ -1135,7 +1219,6 @@ paths:
                 - start-rtmp
                 - start-rtmp-view
                 - stop-rtmp
-                - switchdetector
               in: query
               name: cmd
               required: true
