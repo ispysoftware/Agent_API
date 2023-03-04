@@ -953,11 +953,11 @@ paths:
                     description: Unblock external access to the system.
             tags: 
             - Commands
-	/command/actionOn:
+    /command/actionOn:
         get:
             summary: Switches an action on
             operationId: /command/actionOn
-			parameters:
+            parameters:
             - description: ID (from the Action configuration in the UI)
               in: query
               name: ID
@@ -970,11 +970,11 @@ paths:
                     description: Switches an action on
             tags: 
             - Commands
-	/command/actionOff:
+    /command/actionOff:
         get:
             summary: Switches an action off
             operationId: /command/actionOn
-			parameters:
+            parameters:
             - description: ID (from the Action configuration in the UI)
               in: query
               name: ID
@@ -987,11 +987,11 @@ paths:
                     description: Switches an action off
             tags: 
             - Commands
-	/command/actionRun:
+    /command/actionRun:
         get:
             summary:  Executes an action (bypasses filtering)
             operationId: /command/actionOn
-			parameters:
+            parameters:
             - description: ID (from the Action configuration in the UI)
               in: query
               name: ID
@@ -1003,8 +1003,8 @@ paths:
                 "200":
                     description: Executes an action
             tags: 
-            - Commands		
-	/command/switchDetector:
+            - Commands        
+    /command/switchDetector:
         get:
             summary: Switch the detector for the device on or off.
             operationId: /command/switchDetector
@@ -1022,7 +1022,7 @@ paths:
               name: ot
               required: true
               type: integer
-			- description: On or Off
+            - description: On or Off
               enum:
               - true
               - false
@@ -1036,7 +1036,7 @@ paths:
                 "200":
                     description: Switches the detector on or off
             tags: 
-            - Commands			
+            - Commands            
     /events.json:
         get:
             summary: Return a collection of event objects with details of the device events
