@@ -1219,10 +1219,6 @@ paths:
                 - start-rtmp
                 - start-rtmp-view
                 - stop-rtmp
-              in: query
-              name: cmd
-              required: true
-              type: string
             produces:
                 - application/json
             responses:
@@ -1230,6 +1226,31 @@ paths:
                   description: OK
             tags: 
             - Query
+    /q/queryLevel:
+        get:
+            summary: Returns the detected motion or sound level of the device
+            operationId: /q/queryLevel
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Audio level where 1 is max and 0 is min
+            tags: 
+            - Streams
     /q/getSessionCount:
         get:
             summary: Returns the number of active sessions.
