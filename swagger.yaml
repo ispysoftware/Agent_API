@@ -5,7 +5,7 @@ info:
     \ AgentDVR at [https://www.ispyconnect.com](https://www.ispyconnect.com)\
     \ This interface uses the default API endpoint of http://localhost:8090. You will need Agent DVR installed and running to use it."
   title: 'Agent DVR'
-  version: "4.5.5.0"
+  version: "4.6.6.0"
   termsOfService: "https://www.ispyconnect.com/terms.aspx"
   license:
     name: "Apache 2.0"
@@ -1250,7 +1250,7 @@ paths:
                 "200":
                     description: Audio level where 1 is max and 0 is min
             tags: 
-            - Streams
+            - Query
     /q/getSessionCount:
         get:
             summary: Returns the number of active sessions.
