@@ -605,7 +605,7 @@ paths:
                     description: Start recording for the device.
             tags: 
             - Commands
-	/command/triggerRecord:
+    /command/triggerRecord:
         get:
             summary: Trigger recording for the device. Recording continues until Trigger Timeout is reached (on the recording tab of the device). Timeout is reset with each call.
             operationId: /command/triggerRecord
