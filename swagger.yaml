@@ -1091,7 +1091,32 @@ paths:
                 "200":
                     description: Switches the detector on or off
             tags: 
-            - Commands            
+            - Commands           
+    /command/purge:
+        get:
+            summary: Purge the controls folder of all content (4.7.7.0+)
+            operationId: /command/purge
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Purges all recordings (deletes) for the control
+            tags: 
+            - Commands  
     /events.json:
         get:
             summary: Return a collection of event objects with details of the device events
