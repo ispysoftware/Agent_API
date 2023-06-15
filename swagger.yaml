@@ -1094,7 +1094,7 @@ paths:
             - Commands           
     /command/purge:
         get:
-            summary: Purge the controls folder of all content (4.7.7.0+)
+            summary: 'Purge the control''s folder of all content (4.7.7.0+)'
             operationId: /command/purge
             parameters:
             - description: Object ID
