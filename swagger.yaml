@@ -635,7 +635,7 @@ paths:
                     description: Change the timestamp display on the camera
             tags: 
             - Commands
-    /command/settimestamp:
+    /command/tagrecording:
         get:
             summary: Tag the current recording
             operationId: /command/tagrecording
