@@ -662,7 +662,7 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: Tag the current live recording
+                    description: Tag the current live recording (v5.0.3.0+)
             tags: 
             - Commands
     /command/triggerRecord:
