@@ -635,6 +635,36 @@ paths:
                     description: Change the timestamp display on the camera
             tags: 
             - Commands
+    /command/settimestamp:
+        get:
+            summary: Tag the current recording
+            operationId: /command/tagrecording
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            - description: Text
+              in: query
+              name: tag
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Tag the current live recording
+            tags: 
+            - Commands
     /command/triggerRecord:
         get:
             summary: Trigger recording for the device. Recording continues until Trigger Timeout is reached (on the recording tab of the device). Timeout is reset with each call.
