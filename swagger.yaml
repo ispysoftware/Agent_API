@@ -1058,7 +1058,7 @@ paths:
     /command/actionOff:
         get:
             summary: Switches an action off
-            operationId: /command/actionOn
+            operationId: /command/actionOff
             parameters:
             - description: ID (from the Action configuration in the UI)
               in: query
@@ -1075,7 +1075,7 @@ paths:
     /command/actionRun:
         get:
             summary:  Executes an action (bypasses filtering)
-            operationId: /command/actionOn
+            operationId: /command/actionRun
             parameters:
             - description: ID (from the Action configuration in the UI)
               in: query
