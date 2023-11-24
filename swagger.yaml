@@ -113,32 +113,32 @@ paths:
               name: ot
               required: true
               type: integer
-			- description: Local path to the file
+            - description: Local path to the file
               in: query
               name: path
               required: true
               type: string
-			- description: Target filename. Will generate a filename if not specified
+            - description: Target filename. Will generate a filename if not specified
               in: query
               name: name
               required: false
               type: string
-			- description: Timestamp in UTC javascript ticks. Will use file creation time if not specified
+            - description: Timestamp in UTC javascript ticks. Will use file creation time if not specified
               in: query
               name: timestamp
               required: false
               type: integer
-			- description: Convert the file to mp4 (or mp3 if audio) (false)
+            - description: Convert the file to mp4 (or mp3 if audio) (false)
               in: query
               name: convert
               required: false
               type: boolean
-			- description: Move the file (false)
+            - description: Move the file (false)
               in: query
               name: move
               required: false
               type: boolean
-			- description: Tag the recording in the database (csv)
+            - description: Tag the recording in the database (csv)
               in: query
               name: tags
               required: false
@@ -149,8 +149,8 @@ paths:
                 "200":
                     description: alert
             tags: 
-            - Commands	
-	/command/alert:
+            - Commands    
+    /command/alert:
         get:
             summary: Trigger alert on the device.
             operationId: /command/alert
@@ -247,7 +247,7 @@ paths:
                     description: allOn
             tags: 
             - Commands
-	/command/appendtimestamp:
+    /command/appendtimestamp:
         get:
             summary: Appends text to the devices default timestamp
             operationId: /command/appendtimestamp
@@ -265,7 +265,7 @@ paths:
               name: ot
               required: true
               type: integer
-			- description: text to append
+            - description: text to append
               in: query
               name: text
               required: true
@@ -324,11 +324,11 @@ paths:
                     description: Arm the system.
             tags: 
             - Commands
-	/command/armgroups:
+    /command/armgroups:
         get:
             summary: Arm system and groups of devices (enable alerts)
             operationId: /command/armGroups
-			parameters:
+            parameters:
             - description: group names (csv)
               in: query
               name: groups
@@ -341,11 +341,11 @@ paths:
                     description: Arm the system and enable alerts on groups of devices
             tags: 
             - Commands
-	/command/disarmgroups:
+    /command/disarmgroups:
         get:
             summary: Disarm groups of devices (disable alerts)
             operationId: /command/disarmGroups
-			parameters:
+            parameters:
             - description: group names (csv)
               in: query
               name: groups
@@ -358,7 +358,7 @@ paths:
                     description: Disarm the system and enable alerts on groups of devices
             tags: 
             - Commands
-	/command/arm:
+    /command/arm:
         get:
             summary: Arm the system.
             operationId: /command/arm
@@ -369,17 +369,17 @@ paths:
                     description: Arm the system.
             tags: 
             - Commands
-	/command/armProfile:
+    /command/armProfile:
         get:
             summary: Arm the system and apply the specified profile.
             operationId: /command/armprofile
-			parameters:
+            parameters:
             - description: profile index
               in: query
               name: ind
               required: true
               type: integer
-			- description: Optionally disarm after a delay (minutes)
+            - description: Optionally disarm after a delay (minutes)
               in: query
               name: disarmdelay
               required: false
@@ -391,17 +391,17 @@ paths:
                     description: Armed the system and applied the specified profile.
             tags: 
             - Commands
-	/command/disarmProfile:
+    /command/disarmProfile:
         get:
             summary: Disarm the system and apply the specified profile.
             operationId: /command/disarmProfile
-			parameters:
+            parameters:
             - description: profile index
               in: query
               name: ind
               required: true
               type: integer
-			- description: Optionally arm the system after a delay (minutes)
+            - description: Optionally arm the system after a delay (minutes)
               in: query
               name: armdelay
               required: false
@@ -779,7 +779,7 @@ paths:
                     description: Start recording for the device.
             tags: 
             - Commands
-	/command/recordRestart:
+    /command/recordRestart:
         get:
             summary: Restart recording for the device.
             operationId: /command/record
@@ -804,7 +804,7 @@ paths:
                     description: Restarted recording for the device.
             tags: 
             - Commands
-	/command/setSensitivity:
+    /command/setSensitivity:
         get:
             summary: Set the motion detector sensitivity on the selected device
             operationId: /command/record
@@ -822,17 +822,17 @@ paths:
               name: ot
               required: true
               type: integer
-			- description: Minimum (0-100)
+            - description: Minimum (0-100)
               in: query
               name: min
               required: false
               type: integer
-			- description: Maximum (0-100)
+            - description: Maximum (0-100)
               in: query
               name: max
               required: false
               type: integer
-			- description: Gain Multiplier (0-100) 
+            - description: Gain Multiplier (0-100) 
               in: query
               name: gain
               required: false
@@ -874,7 +874,7 @@ paths:
                     description: Change the timestamp display on the camera
             tags: 
             - Commands
-	/command/start-rtmp:
+    /command/start-rtmp:
         get:
             summary: Start RTMP streaming a device
             operationId: /command/start-rtmp
@@ -884,7 +884,7 @@ paths:
               name: ident
               required: true
               type: string
-			- description: Object ID
+            - description: Object ID
               in: query
               name: oid
               required: true
@@ -904,7 +904,7 @@ paths:
                     description: Starts streaming the device to the RTMP server
             tags: 
             - Commands
-	/command/start-rtmp-view:
+    /command/start-rtmp-view:
         get:
             summary: Start RTMP streaming a configured view
             operationId: /command/start-rtmp-view
@@ -914,7 +914,7 @@ paths:
               name: ident
               required: true
               type: string
-			- description: View index
+            - description: View index
               in: query
               name: ind
               required: true
@@ -926,7 +926,7 @@ paths:
                     description: Starts streaming the view to the RTMP server
             tags: 
             - Commands
-	/command/stop-rtmp:
+    /command/stop-rtmp:
         get:
             summary: Stop RTMP streaming a device
             operationId: /command/start-rtmp
