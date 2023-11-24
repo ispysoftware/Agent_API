@@ -5,7 +5,7 @@ info:
     \ AgentDVR at [https://www.ispyconnect.com](https://www.ispyconnect.com)\
     \ This interface uses the default API endpoint of http://localhost:8090. You will need Agent DVR installed and running to use it."
   title: 'Agent DVR'
-  version: "5.0.3.0"
+  version: "5.1.3.0"
   termsOfService: "https://www.ispyconnect.com/terms.aspx"
   license:
     name: "Apache 2.0"
@@ -95,7 +95,62 @@ paths:
                     description: Returns live audio from the specified microphone in ogg format
             tags: 
             - Audio
-    /command/alert:
+    /command/addrecording:
+        get:
+            summary: Add an existing recording to a device
+            operationId: /command/addrecording
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+			- description: Local path to the file
+              in: query
+              name: path
+              required: true
+              type: string
+			- description: Target filename. Will generate a filename if not specified
+              in: query
+              name: name
+              required: false
+              type: string
+			- description: Timestamp in UTC javascript ticks. Will use file creation time if not specified
+              in: query
+              name: timestamp
+              required: false
+              type: integer
+			- description: Convert the file to mp4 (or mp3 if audio) (false)
+              in: query
+              name: convert
+              required: false
+              type: boolean
+			- description: Move the file (false)
+              in: query
+              name: move
+              required: false
+              type: boolean
+			- description: Tag the recording in the database (csv)
+              in: query
+              name: tags
+              required: false
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: alert
+            tags: 
+            - Commands	
+	/command/alert:
         get:
             summary: Trigger alert on the device.
             operationId: /command/alert
@@ -192,6 +247,36 @@ paths:
                     description: allOn
             tags: 
             - Commands
+	/command/appendtimestamp:
+        get:
+            summary: Appends text to the devices default timestamp
+            operationId: /command/appendtimestamp
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+			- description: text to append
+              in: query
+              name: text
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: alert
+            tags: 
+            - Commands
     /command/applySchedule:
         get:
             summary: Apply schedule to all devices.
@@ -237,6 +322,95 @@ paths:
             responses:
                 "200":
                     description: Arm the system.
+            tags: 
+            - Commands
+	/command/armgroups:
+        get:
+            summary: Arm system and groups of devices (enable alerts)
+            operationId: /command/armGroups
+			parameters:
+            - description: group names (csv)
+              in: query
+              name: groups
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Arm the system and enable alerts on groups of devices
+            tags: 
+            - Commands
+	/command/disarmgroups:
+        get:
+            summary: Disarm groups of devices (disable alerts)
+            operationId: /command/disarmGroups
+			parameters:
+            - description: group names (csv)
+              in: query
+              name: groups
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Disarm the system and enable alerts on groups of devices
+            tags: 
+            - Commands
+	/command/arm:
+        get:
+            summary: Arm the system.
+            operationId: /command/arm
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Arm the system.
+            tags: 
+            - Commands
+	/command/armProfile:
+        get:
+            summary: Arm the system and apply the specified profile.
+            operationId: /command/armprofile
+			parameters:
+            - description: profile index
+              in: query
+              name: ind
+              required: true
+              type: integer
+			- description: Optionally disarm after a delay (minutes)
+              in: query
+              name: disarmdelay
+              required: false
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Armed the system and applied the specified profile.
+            tags: 
+            - Commands
+	/command/disarmProfile:
+        get:
+            summary: Disarm the system and apply the specified profile.
+            operationId: /command/disarmProfile
+			parameters:
+            - description: profile index
+              in: query
+              name: ind
+              required: true
+              type: integer
+			- description: Optionally arm the system after a delay (minutes)
+              in: query
+              name: armdelay
+              required: false
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Disarmed and applied the specified profile.
             tags: 
             - Commands
     /command/blockExternal:
@@ -605,6 +779,71 @@ paths:
                     description: Start recording for the device.
             tags: 
             - Commands
+	/command/recordRestart:
+        get:
+            summary: Restart recording for the device.
+            operationId: /command/record
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Restarted recording for the device.
+            tags: 
+            - Commands
+	/command/setSensitivity:
+        get:
+            summary: Set the motion detector sensitivity on the selected device
+            operationId: /command/record
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+			- description: Minimum (0-100)
+              in: query
+              name: min
+              required: false
+              type: integer
+			- description: Maximum (0-100)
+              in: query
+              name: max
+              required: false
+              type: integer
+			- description: Gain Multiplier (0-100) 
+              in: query
+              name: gain
+              required: false
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Set the sensitivity for the device
+            tags: 
+            - Commands
     /command/settimestamp:
         get:
             summary: Change the timestamp display on the camera
@@ -633,6 +872,75 @@ paths:
             responses:
                 "200":
                     description: Change the timestamp display on the camera
+            tags: 
+            - Commands
+	/command/start-rtmp:
+        get:
+            summary: Start RTMP streaming a device
+            operationId: /command/start-rtmp
+            parameters:
+            - description: Identifier of the RTMP server (shown in the RTMP servers list in server settings)
+              in: query
+              name: ident
+              required: true
+              type: string
+			- description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Starts streaming the device to the RTMP server
+            tags: 
+            - Commands
+	/command/start-rtmp-view:
+        get:
+            summary: Start RTMP streaming a configured view
+            operationId: /command/start-rtmp-view
+            parameters:
+            - description: Identifier of the RTMP server (shown in the RTMP servers list in server settings)
+              in: query
+              name: ident
+              required: true
+              type: string
+			- description: View index
+              in: query
+              name: ind
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Starts streaming the view to the RTMP server
+            tags: 
+            - Commands
+	/command/stop-rtmp:
+        get:
+            summary: Stop RTMP streaming a device
+            operationId: /command/start-rtmp
+            parameters:
+            - description: Identifier of the RTMP server (shown in the RTMP servers list in server settings)
+              in: query
+              name: ident
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Stops streaming to the RTMP server
             tags: 
             - Commands
     /command/tagrecording:
@@ -1450,22 +1758,10 @@ paths:
             parameters:
             - description: Command
               enum:
-                - addrecording
-                - appendtimestamp
-                - armgroups
-                - armprofile
-                - disarmgroups
-                - disarmprofile
                 - getcameragrabs
                 - getevents
                 - getsessioncount
                 - getstreamingstatus
-                - recordRestart
-                - setsensitivity
-                - settimestamp
-                - start-rtmp
-                - start-rtmp-view
-                - stop-rtmp
             produces:
                 - application/json
             responses:
