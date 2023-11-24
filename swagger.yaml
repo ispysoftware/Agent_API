@@ -1088,7 +1088,146 @@ paths:
                 "200":
                     description: Executes an action
             tags: 
-            - Commands        
+            - Commands      
+    /command/addCamera:
+        get:
+            summary:  Add an IP camera
+            operationId: /command/addCamera
+            parameters:
+            - description: name of camera
+              in: query
+              name: name
+              required: false
+              type: string
+            - description: URL for the sub stream video feed
+              in: query
+              name: substream
+              required: false
+              type: string
+            - description: URL for the record stream video feed
+              in: query
+              name: mainstream
+              required: false
+              type: string
+            - description: Camera username
+              in: query
+              name: username
+              required: false
+              type: string
+            - description: Camera password
+              in: query
+              name: password
+              required: false
+              type: string
+            - description: alerts enabled (1 or 0)
+              in: query
+              name: alerts
+              required: false
+              type: int
+            - description: recording enabled (1 or 0)
+              in: query
+              name: record
+              required: false
+              type: int
+            - description: resize enabled (1 or 0)
+              in: query
+              name: resize
+              required: false
+              type: int
+            - description: raw record enabled (1 or 0)
+              in: query
+              name: raw
+              required: false
+              type: int
+            - description: display FPS limit
+              in: query
+              name: fps
+              required: false
+              type: int
+            - description: record FPS limit
+              in: query
+              name: recfps
+              required: false
+              type: int
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Adds a camera
+            tags: 
+            - Commands
+    /command/addOnvif:
+        get:
+            summary:  Add an ONVIF camera
+            operationId: /command/addOnvif
+            parameters:
+            - description: URL for the ONVIF device management endpoint
+              in: query
+              name: uri
+              required: true
+              type: string
+            - description: name of camera
+              in: query
+              name: name
+              required: false
+              type: string
+            - description: Profile index for the live stream (0)
+              in: query
+              name: substream
+              required: false
+              type: int
+            - description: Profile index for the record stream (1)
+              in: query
+              name: mainstream
+              required: false
+              type: int
+            - description: Camera username
+              in: query
+              name: username
+              required: false
+              type: string
+            - description: Camera password
+              in: query
+              name: password
+              required: false
+              type: string
+            - description: alerts enabled (1 or 0)
+              in: query
+              name: alerts
+              required: false
+              type: int
+            - description: recording enabled (1 or 0)
+              in: query
+              name: record
+              required: false
+              type: int
+            - description: resize enabled (1 or 0)
+              in: query
+              name: resize
+              required: false
+              type: int
+            - description: raw record enabled (1 or 0)
+              in: query
+              name: raw
+              required: false
+              type: int
+            - description: display FPS limit
+              in: query
+              name: fps
+              required: false
+              type: int
+            - description: record FPS limit
+              in: query
+              name: recfps
+              required: false
+              type: int
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Adds a camera
+            tags: 
+            - Commands
     /command/switchDetector:
         get:
             summary: Switch the detector for the device on or off.
@@ -1311,8 +1450,6 @@ paths:
             parameters:
             - description: Command
               enum:
-                - addcamera
-                - addonvif
                 - addrecording
                 - appendtimestamp
                 - armgroups
