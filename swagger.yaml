@@ -358,17 +358,6 @@ paths:
                     description: Disarm the system and enable alerts on groups of devices
             tags: 
             - Commands
-    /command/arm:
-        get:
-            summary: Arm the system.
-            operationId: /command/arm
-            produces:
-                - application/json
-            responses:
-                "200":
-                    description: Arm the system.
-            tags: 
-            - Commands
     /command/armProfile:
         get:
             summary: Arm the system and apply the specified profile.
