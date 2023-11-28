@@ -1391,6 +1391,19 @@ paths:
             summary:  Add an IP camera
             operationId: /command/addCamera
             parameters:
+            - description: id of camera (optional - will modify if provided (5.1.3.0+))
+              in: query
+              name: oid
+              required: false
+              type: int
+            - description: Object TypeID (=2 for camera)
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: false
+              type: integer
             - description: name of camera
               in: query
               name: name
