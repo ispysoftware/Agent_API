@@ -1263,6 +1263,23 @@ paths:
                     description: Apply the specified profile with an index.
             tags: 
             - Commands
+    /command/snapshot:
+        get:
+            summary: Take a photo on a device
+            operationId: /command/snapshot
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Took a photo
+            tags: 
+            - Commands
     /command/stopCloudUploads:
         get:
             summary: stopCloudUploads
