@@ -1088,7 +1088,7 @@ paths:
               type: integer
             produces:
                 - application/json
-            responses:F
+            responses:
                 "200":
                     description: Starts streaming the device to the RTMP server
             tags: 
