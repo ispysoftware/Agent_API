@@ -5,7 +5,7 @@ info:
     \ AgentDVR at [https://www.ispyconnect.com](https://www.ispyconnect.com)\
     \ This interface uses the default API endpoint of http://localhost:8090. You will need Agent DVR installed and running to use it."
   title: 'Agent DVR'
-  version: "5.1.3.0"
+  version: "5.2.2.0"
   termsOfService: "https://www.ispyconnect.com/terms.aspx"
   license:
     name: "Apache 2.0"
@@ -549,6 +549,56 @@ paths:
                     description: Disarm the system.
             tags: 
             - Commands
+    /command/facedetecton:
+        get:
+            summary: Turn facial recognition on
+            operationId: /command/faceDetectOn
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn facial recognition on for the device.
+            tags: 
+            - Commands
+    /command/facedetectoff:
+        get:
+            summary: Turn facial recognition off
+            operationId: /command/faceDetectOff
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn facial recognition off for the device.
+            tags: 
+            - Commands
     /command/ftpFrame:
         get:
             summary: Send a live frame via FTP.
@@ -732,6 +782,106 @@ paths:
                     description: getStatus
             tags: 
             - Commands
+    /command/lpron:
+        get:
+            summary: Turn LPR on
+            operationId: /command/lprOn
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn lpr on for the device.
+            tags: 
+            - Commands
+    /command/lproff:
+        get:
+            summary: Turn lpr off
+            operationId: /command/lprOff
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn lpr off for the device.
+            tags: 
+            - Commands
+    /command/objectdetecton:
+        get:
+            summary: Turn object recognition on
+            operationId: /command/objectDetectOn
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn object recognition on for the device.
+            tags: 
+            - Commands
+    /command/objectdetectoff:
+        get:
+            summary: Turn object recognition off
+            operationId: /command/objectDetectOff
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn object recognition off for the device.
+            tags: 
+            - Commands
     /command/ping:
         get:
             summary: ping
@@ -833,6 +983,56 @@ paths:
                     description: Set the sensitivity for the device
             tags: 
             - Commands
+    /command/soundon:
+        get:
+            summary: Turn sound recognition on
+            operationId: /command/soundOn
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn sound recognition on for the device.
+            tags: 
+            - Commands
+    /command/soundoff:
+        get:
+            summary: Turn sound recognition off
+            operationId: /command/soundOff
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn sound recognition off for the device.
+            tags: 
+            - Commands
     /command/settimestamp:
         get:
             summary: Change the timestamp display on the camera
@@ -888,7 +1088,7 @@ paths:
               type: integer
             produces:
                 - application/json
-            responses:
+            responses:F
                 "200":
                     description: Starts streaming the device to the RTMP server
             tags: 
