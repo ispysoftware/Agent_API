@@ -1162,7 +1162,107 @@ paths:
                     description: Tag the current live recording (v5.0.3.0+)
             tags: 
             - Commands
-    /command/triggerRecord:
+    /command/triggerLPR:
+        get:
+            summary: Trigger LPR recognition for the device.
+            operationId: /command/triggerLPR
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Trigger LPR recognition for the device.
+            tags: 
+            - Commands
+    /command/triggerFace:
+        get:
+            summary: Trigger facial recognition for the device.
+            operationId: /command/triggerFace
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Trigger facial recognition for the device.
+            tags: 
+            - Commands
+    /command/triggerObject:
+        get:
+            summary: Trigger object recognition for the device
+            operationId: /command/triggerObject
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Trigger object recognition for the device.
+            tags: 
+            - Commands
+    /command/triggerScene:
+        get:
+            summary: Trigger scene recognition for the device
+            operationId: /command/triggerScene
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Trigger scene recognition for the device.
+            tags: 
+            - Commands
+	/command/triggerRecord:
         get:
             summary: Trigger recording for the device. Recording continues until Trigger Timeout is reached (on the recording tab of the device). Timeout is reset with each call.
             operationId: /command/triggerRecord
