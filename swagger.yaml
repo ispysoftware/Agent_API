@@ -2115,7 +2115,7 @@ paths:
                 - application/json
             responses:
                 "200":
-                  description: OK
+                  description: OK. If you receive 800 grabs you will need to make another call to getcameragrabs passing in enddate=x where x is the last received timestamp in the array to retrieve the next 800
             tags: 
             - Query
     /q/queryLevel:
