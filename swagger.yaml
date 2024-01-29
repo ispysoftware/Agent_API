@@ -1262,6 +1262,36 @@ paths:
                     description: Trigger scene recognition for the device.
             tags: 
             - Commands
+    /command/triggerTask:
+        get:
+            summary: Trigger a task on the device
+            operationId: /command/triggerScene
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            - description: Task
+              in: query
+              name: task
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Trigger scene recognition for the device.
+            tags: 
+            - Commands
     /command/triggerRecord:
         get:
             summary: Trigger recording for the device. Recording continues until Trigger Timeout is reached (on the recording tab of the device). Timeout is reset with each call.
@@ -2163,7 +2193,7 @@ paths:
                 - video/mp4
             responses:
                 "200":
-                    description: Stream the file to the caller. The filename is from the "fn" property in the json from the getevents call. It is up to the calling application to provide playback facility.
+                    description: Stream the file to the caller. The filename is from the "fn" property in the json from the getevents call. It is up to the calling application to provide playback facility. If you receive 400 events you will need to make another call to getevents passing in enddate=x where x is the last received timestamp in the array to retrieve the next 400.
             tags: 
             - Streams
     /video.gif:
