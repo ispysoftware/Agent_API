@@ -782,6 +782,17 @@ paths:
                     description: getStatus
             tags: 
             - Commands
+    /command/getSystemStats:
+        get:
+            summary: Return the system usage stats
+            operationId: /command/getsystemstats
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: cpu/ memory and disk space
+            tags: 
+            - Commands
     /command/lpron:
         get:
             summary: Turn LPR on
