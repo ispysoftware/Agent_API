@@ -5,7 +5,7 @@ info:
     \ AgentDVR at [https://www.ispyconnect.com](https://www.ispyconnect.com)\
     \ This interface uses the default API endpoint of http://localhost:8090. You will need Agent DVR installed and running to use it. Many of the commands below take an Object ID and an Object Type ID. The Object ID is displayed in Agent's UI when you edit the device at the top left. For example if it says 1: Home Cam then your Object ID is 1. The Object Type ID is 1 for Microphones and 2 for cameras"
   title: 'Agent DVR'
-  version: "5.2.4.0"
+  version: "5.2.5.0"
   termsOfService: "https://www.ispyconnect.com/terms.aspx"
   license:
     name: "Apache 2.0"
