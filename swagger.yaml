@@ -2129,7 +2129,7 @@ paths:
               name: ot
               required: true
               type: integer
-      - description: End Date
+            - description: End Date
               in: query
               name: oid
               required: false
