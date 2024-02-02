@@ -932,7 +932,7 @@ paths:
     /command/recordRestart:
         get:
             summary: Restart recording for the device.
-            operationId: /command/record
+            operationId: /command/recordRestart
             parameters:
             - description: Object ID
               in: query
@@ -957,7 +957,7 @@ paths:
     /command/setSensitivity:
         get:
             summary: Set the motion detector sensitivity on the selected device
-            operationId: /command/record
+            operationId: /command/setSensitivity
             parameters:
             - description: Object ID
               in: query
@@ -1129,7 +1129,7 @@ paths:
     /command/stop-rtmp:
         get:
             summary: Stop RTMP streaming a device
-            operationId: /command/start-rtmp
+            operationId: /command/stop-rtmp
             parameters:
             - description: Identifier of the RTMP server (shown in the RTMP servers list in server settings)
               in: query
@@ -1276,7 +1276,7 @@ paths:
     /command/triggerTask:
         get:
             summary: Trigger a task on the device
-            operationId: /command/triggerScene
+            operationId: /command/triggerTask
             parameters:
             - description: Object ID
               in: query
@@ -2111,22 +2111,34 @@ paths:
                     description: OK
             tags: 
             - PTZ
-    /q.json:
+  /q/getCameraGrabs:
         get:
-            summary: Queries
-            operationId: q.json
+            summary: Returns JSON of the camera's photos
+            operationId: /q/getCameraGrabs
             parameters:
-            - description: Command
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
               enum:
-                - getcameragrabs
-                - getevents
-                - getsessioncount
-                - getstreamingstatus
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+      - description: End Date
+              in: query
+              name: oid
+              required: false
+              type: integer
             produces:
                 - application/json
             responses:
                 "200":
-                  description: OK. If you receive 800 grabs you will need to make another call to getcameragrabs passing in enddate=x where x is the last received timestamp in the array to retrieve the next 800
+                    description: Camera grab JSON - If you receive 800 grabs you will need to make another call to getcameragrabs passing in enddate=x where x is the last received timestamp in the array to retrieve the next 800
             tags: 
             - Query
     /q/queryLevel:
