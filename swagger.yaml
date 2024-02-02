@@ -2111,7 +2111,7 @@ paths:
                     description: OK
             tags: 
             - PTZ
-  /q/getCameraGrabs:
+    /q/getCameraGrabs:
         get:
             summary: Returns JSON of the camera's photos
             operationId: /q/getCameraGrabs
