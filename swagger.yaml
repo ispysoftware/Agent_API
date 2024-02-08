@@ -956,7 +956,7 @@ paths:
             - Commands
     /command/setAIFind:
         get:
-            summary: Set the object list you want the AI model to look for
+            summary: Set the object list you want the AI model to look for, for example: person,car
             operationId: /command/setAIFind
             parameters:
             - description: Object ID
@@ -981,12 +981,12 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: Set the find list you want the AI model to look for, for example: person,car
+                    description: Set the find list
             tags: 
             - Commands
     /command/setAIModel:
         get:
-            summary: Set the AI model to use for object recognition. Models are used in the endpoints for the AI server. To use the default (/v1/vision/detection) pass in the name "default". Otherwise the model url will use the format /v1/vision/custom/name
+            summary: Set the AI model to use for object recognition. Models are used in the endpoints for the AI server. To use the default (/v1/vision/detection) pass in the name default. Otherwise the model url will use the format /v1/vision/custom/name
             operationId: /command/setAIModel
             parameters:
             - description: Object ID
