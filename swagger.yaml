@@ -5,7 +5,7 @@ info:
     \ AgentDVR at [https://www.ispyconnect.com](https://www.ispyconnect.com)\
     \ This interface uses the default API endpoint of http://localhost:8090. You will need Agent DVR installed and running to use it. Many of the commands below take an Object ID and an Object Type ID. The Object ID is displayed in Agent's UI when you edit the device at the top left. For example if it says 1: Home Cam then your Object ID is 1. The Object Type ID is 1 for Microphones and 2 for cameras"
   title: 'Agent DVR'
-  version: "5.2.5.0"
+  version: "5.2.6.0"
   termsOfService: "https://www.ispyconnect.com/terms.aspx"
   license:
     name: "Apache 2.0"
@@ -952,6 +952,66 @@ paths:
             responses:
                 "200":
                     description: Restarted recording for the device.
+            tags: 
+            - Commands
+    /command/setAIFind:
+        get:
+            summary: Set the object list you want the AI model to look for
+            operationId: /command/setAIFind
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            - description: Object List
+              in: query
+              name: objects
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Set the find list you want the AI model to look for, for example: person,car
+            tags: 
+            - Commands
+    /command/setAIModel:
+        get:
+            summary: Set the AI model to use for object recognition. Models are used in the endpoints for the AI server. To use the default (/v1/vision/detection) pass in the name "default". Otherwise the model url will use the format /v1/vision/custom/name
+            operationId: /command/setAIModel
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            - description: Model Name
+              in: query
+              name: name
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Set the AI model for the device.
             tags: 
             - Commands
     /command/setSensitivity:
