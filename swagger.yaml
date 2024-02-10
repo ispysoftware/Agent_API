@@ -2238,7 +2238,7 @@ paths:
         get:
             summary: "Get a JSON list of recordings for the server or specific device. If you receive 400 events you will need to make another call to getevents passing in enddate=x where x is the last received timestamp in the array to retrieve the next 400. Pass in tag=x to filter the results to recordings tagged with x"
             operationId: /q/getEvents
-      parameters:
+            parameters:
             - description: Object ID
               in: query
               name: oid
