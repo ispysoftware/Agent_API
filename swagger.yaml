@@ -2014,6 +2014,28 @@ paths:
                     description: Purges all recordings (deletes) for the control
             tags: 
             - Commands
+    /fileThumb.jpg:
+        get:
+            summary: Returns a thumbnail image for the specified recording and filename
+            operationId: fileThumb.jpg
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Filename (3_2021-01-19_12-22-55_125.jpg) (use ..._large.jpg for a large version)
+              in: query
+              name: fn
+              required: true
+              type: string
+            produces:
+                - image/jpeg
+            responses:
+                "200":
+                    description: Returns a thumbnail image for the specified recording and filename
+            tags: 
+            - Media
     /grab.jpg:
         get:
             summary: Returns a still image for the specified object(s)
@@ -2210,6 +2232,41 @@ paths:
             responses:
                 "200":
                   description: Get a JSON list of configured RTMP servers (with status). This provides an ident field you use in subsequent requests.
+            tags: 
+            - Queries
+    /q/getEvents:
+        get:
+            summary: "Get a JSON list of recordings for the server or specific device. If you receive 400 events you will need to make another call to getevents passing in enddate=x where x is the last received timestamp in the array to retrieve the next 400. Pass in tag=x to filter the results to recordings tagged with x"
+            operationId: /q/getEvents
+      parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: false
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: false
+              type: integer
+            - description: Filter
+              in: query
+              name: tag
+              required: false
+              type: string
+            - description: Compresses the results using gzip
+              in: query
+              name: compress
+              required: false
+              type: boolean
+            produces:
+                - application/json
+            responses:
+                "200":
+                  description: Return json array
             tags: 
             - Queries
     /streamFile:
