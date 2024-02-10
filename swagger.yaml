@@ -2268,7 +2268,7 @@ paths:
                 "200":
                   description: Return json array
             tags: 
-            - Queries
+            - Query
     /streamFile:
         get:
             summary: Stream the file to the caller
