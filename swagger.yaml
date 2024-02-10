@@ -2013,43 +2013,7 @@ paths:
                 "200":
                     description: Purges all recordings (deletes) for the control
             tags: 
-            - Commands  
-    /events.json:
-        get:
-            summary: Return a collection of event objects with details of the device events
-            operationId: events.json
-            parameters:
-            - description: Object ID
-              in: query
-              name: oid
-              required: true
-              type: integer
-            - description: Object TypeID
-              enum:
-              - 1
-              - 2
-              in: query
-              name: ot
-              required: true
-              type: integer
-            - description: Seconds
-              in: query
-              name: seconds
-              required: true
-              minimum: 1
-              maximum: 600
-              type: integer
-            produces:
-                - application/json
-            responses:
-                "200":
-                    description: Return a collection of event objects with details of the device events over the last 60 seconds (seconds can be up to 600)
-                    schema:
-                        items:
-                         $ref: '#/definitions/Event'
-                        type: array
-            tags: 
-            - Events
+            - Commands
     /grab.jpg:
         get:
             summary: Returns a still image for the specified object(s)
