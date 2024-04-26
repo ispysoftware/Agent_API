@@ -2117,6 +2117,23 @@ paths:
                     description: Returns a thumbnail image for the specified object and filename
             tags: 
             - Media
+    /photo.jpg:
+        get:
+            summary: Returns a photo frame for the specified camera (5.4.6.0+)
+            operationId: photo.jpg
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            produces:
+                - image/jpeg
+            responses:
+                "200":
+                    description: Proxies the image from the cameras photo URL endpoint. Returns the live frame from the camera if not available.
+            tags: 
+            - Media
     /ptz.cgi:
         get:
             summary: PTZ controls
