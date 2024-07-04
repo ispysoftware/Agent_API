@@ -95,6 +95,31 @@ paths:
                     description: Returns live audio from the specified microphone in ogg format
             tags: 
             - Audio
+        /command/addfolder:
+        get:
+            summary: Add existing files from the devices folder to the database
+            operationId: /command/addrecording
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Copy files into the devices folder (available via the storage tab) and then call this command to scan the folder and add the recordings to the database so they are available in the UI. Agent will generate missing data like thumbnails and duration. v5.5.5.0+
+            tags: 
+            - Commands    
     /command/addrecording:
         get:
             summary: Add an existing recording to a device
@@ -147,7 +172,7 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: alert
+                    description: use the optional fields to customise the data
             tags: 
             - Commands    
     /command/alert:
