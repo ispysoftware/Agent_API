@@ -98,7 +98,7 @@ paths:
     /command/addfolder:
         get:
             summary: Add existing files from the devices folder to the database
-            operationId: /command/addrecording
+            operationId: /command/addfolder
             parameters:
             - description: Object ID
               in: query
