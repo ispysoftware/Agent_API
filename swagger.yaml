@@ -95,7 +95,7 @@ paths:
                     description: Returns live audio from the specified microphone in ogg format
             tags: 
             - Audio
-        /command/addfolder:
+    /command/addfolder:
         get:
             summary: Add existing files from the devices folder to the database
             operationId: /command/addrecording
