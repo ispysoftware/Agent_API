@@ -2394,13 +2394,6 @@ paths:
               name: cycle
               required: false
               type: integer
-            - description: Fit Type
-              enum:
-              - Zoom
-              in: query
-              name: fitType
-              required: false
-              type: string
             - description: viewIndex (provide this to display a view from the default account instead of a set of cameras - 5.6.4.0+)
               in: query
               name: viewIndex
@@ -2436,13 +2429,23 @@ paths:
             - description: Object IDs (1,2,3,4)
               in: query
               name: oids
-              required: true
+              required: false
+              type: string
+            - description: Background Color - RGB format (255,0,0)
+              in: query
+              name: backColor
+              required: false
               type: string
             - description: Size (320x240)
               in: query
               name: size
               required: false
               type: string
+            - description: viewIndex (provide this to display a view from the default account instead of a set of cameras - 5.6.4.0+)
+              in: query
+              name: viewIndex
+              required: false
+              type: integer
             produces:
                 - video/mp4
             responses:
@@ -2458,13 +2461,23 @@ paths:
             - description: Object IDs (1,2,3,4)
               in: query
               name: oids
-              required: true
+              required: false
+              type: string
+            - description: Background Color - RGB format (255,0,0)
+              in: query
+              name: backColor
+              required: false
               type: string
             - description: Size (320x240)
               in: query
               name: size
               required: false
               type: string
+            - description: viewIndex (provide this to display a view from the default account instead of a set of cameras - 5.6.4.0+)
+              in: query
+              name: viewIndex
+              required: false
+              type: integer
             produces:
                 - video/mp4
             responses:
