@@ -2382,7 +2382,7 @@ paths:
             - description: Object IDs (1,2,3,4)
               in: query
               name: oids
-              required: true
+              required: false
               type: string
             - description: Background Color - RGB format (255,0,0)
               in: query
@@ -2401,6 +2401,11 @@ paths:
               name: fitType
               required: false
               type: string
+            - description: viewIndex (provide this to display a view from the default account instead of a set of cameras - 5.6.4.0+)
+              in: query
+              name: viewIndex
+              required: false
+              type: integer
             - description: Group
               in: query
               name: group
