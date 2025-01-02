@@ -929,6 +929,66 @@ paths:
                     description: ping
             tags: 
             - Commands
+    /command/ptzscheduleon:
+        get:
+            summary: enable the ptz scheduler or enable a specific ptz schedule entry (5.9.4.0+)
+            operationId: /command/ptzscheduleon
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            - description: Identifier of the PTZ Schedule entry (from the copy button on the PTZ Schedule list in the UI)
+              in: query
+              name: ident
+              required: false
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Enables the PTZ Scheduler or a specific entry
+            tags: 
+            - Commands
+    /command/ptzscheduleoff:
+        get:
+            summary: disable the ptz scheduler or disable a specific ptz schedule entry (5.9.4.0+)
+            operationId: /command/ptzscheduleoff
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            - description: Identifier of the PTZ Schedule entry (from the copy button on the PTZ Schedule list in the UI)
+              in: query
+              name: ident
+              required: false
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Disables the PTZ Scheduler or a specific entry
+            tags: 
+            - Commands
     /command/record:
         get:
             summary: Start recording for the device.
