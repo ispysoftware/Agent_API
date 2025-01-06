@@ -193,6 +193,21 @@ paths:
               name: ot
               required: true
               type: integer
+            - description: Tag (will tag be stored with any associated recording)
+              in: query
+              name: tag
+              required: false
+              type: string
+            - description: AIJSON - any JSON you want passed onto other alert based actions. The presence of AIJSON will also tag the recording and alert as being AI generated.
+              in: query
+              name: aijson
+              required: false
+              type: string
+            - description: Message - any human readable message you want passed onto other alert based actions
+              in: query
+              name: message
+              required: false
+              type: string
             produces:
                 - application/json
             responses:
