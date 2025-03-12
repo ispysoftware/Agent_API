@@ -1305,7 +1305,7 @@ paths:
             - Commands
     /command/tagrecording:
         get:
-            summary: Tag the current recording
+            summary: Tag a previous or current recording. Omit fn parameter to tag current recording.
             operationId: /command/tagrecording
             parameters:
             - description: Object ID
@@ -1326,11 +1326,38 @@ paths:
               name: tag
               required: true
               type: string
+            - description: Filename (2021-01-19_12-22-55_125.jpg)
+              in: query
+              name: fn
+              required: false
+              type: string
             produces:
                 - application/json
             responses:
                 "200":
-                    description: Tag the current live recording (v5.0.3.0+)
+                    description: Tag the current live recording (v5.0.3.0+). Can also tag a previous recording by providing a filename (v6.2.8.0+)
+            tags: 
+            - Commands
+    /command/untagrecording:
+        get:
+            summary: Remove a tag from a recording
+            operationId: /command/untagrecording
+            parameters:
+            - description: Text
+              in: query
+              name: tag
+              required: true
+              type: string
+            - description: Filename (2021-01-19_12-22-55_125.jpg)
+              in: query
+              name: fn
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Remove the tag from the specified recording (v6.2.8.0+)
             tags: 
             - Commands
     /command/triggerLPR:
