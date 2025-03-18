@@ -2483,7 +2483,7 @@ paths:
                 - video/mp4
             responses:
                 "200":
-                    description: Stream the file to the caller. The filename is from the "fn" property in the json from the getevents call. It is up to the calling application to provide playback facility. If you receive 400 events you will need to make another call to getevents passing in enddate=x where x is the last received timestamp in the array to retrieve the next 400.
+                    description: Stream the file to the caller. The filename is from the "fn" property in the json from the getevents call. It is up to the calling application to provide playback facility.
             tags: 
             - Streams
     /video.gif:
