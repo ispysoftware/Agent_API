@@ -1512,7 +1512,7 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: Trigger scene recognition for the device.
+                    description: Trigger a task on the device
             tags: 
             - Commands
     /command/triggerRecord:
