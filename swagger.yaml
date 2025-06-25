@@ -1303,7 +1303,7 @@ paths:
                     description: Stops streaming to the RTMP server
             tags: 
             - Commands
-    /command/tagrecording:
+    /q/tagrecording:
         get:
             summary: Tag a previous or current recording. Omit fn parameter to tag current recording.
             operationId: /command/tagrecording
@@ -1338,7 +1338,7 @@ paths:
                     description: Tag the current live recording (v5.0.3.0+). Can also tag a previous recording by providing a filename (v6.2.8.0+)
             tags: 
             - Commands
-    /command/untagrecording:
+    /q/untagrecording:
         get:
             summary: Remove a tag from a recording
             operationId: /command/untagrecording
