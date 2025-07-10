@@ -1132,7 +1132,7 @@ paths:
               name: ot
               required: true
               type: integer
-            - description: "Setting to modify. Options are: Cameras: alerts, scenedetect, detector, face, ftp, objectdetect, askai, photos. Microphones: detector, alerts"
+            - description: "Setting to modify. Options are: Cameras: alerts, scene, detector, face, ftp, object, askai, photos. Microphones: detector, alerts"
               in: query
               name: type
               required: true
