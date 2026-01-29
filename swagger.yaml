@@ -1959,7 +1959,7 @@ paths:
             - description: ID (from the Action configuration in the UI)
               in: query
               name: ID
-              required: true
+              required: false
               type: string
             - description: Name (name of the action in the UI) - create multiple actions with the same name across devices to run groups of actions.
               in: query
@@ -1981,7 +1981,7 @@ paths:
             - description: ID (from the Action configuration in the UI)
               in: query
               name: ID
-              required: true
+              required: false
               type: string
             - description: Name (name of the action in the UI) - create multiple actions with the same name across devices to run groups of actions.
               in: query
@@ -2003,7 +2003,7 @@ paths:
             - description: ID (from the Action configuration in the UI)
               in: query
               name: ID
-              required: true
+              required: false
               type: string
             - description: Name (name of the action in the UI) - create multiple actions with the same name across devices to run groups of actions.
               in: query
