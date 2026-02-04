@@ -1951,10 +1951,10 @@ paths:
                     description: Unblock external access to the system.
             tags: 
             - Commands
-    /command/actionOn:
+    /command/actionon:
         get:
             summary: Switches an action on
-            operationId: /command/actionOn
+            operationId: /command/actionon
             parameters:
             - description: ID (from the Action configuration in the UI)
               in: query
@@ -1973,10 +1973,10 @@ paths:
                     description: Switches an action on
             tags: 
             - Commands
-    /command/actionOff:
+    /command/actionoff:
         get:
             summary: Switches an action off
-            operationId: /command/actionOff
+            operationId: /command/actionoff
             parameters:
             - description: ID (from the Action configuration in the UI)
               in: query
@@ -1995,10 +1995,10 @@ paths:
                     description: Switches an action off
             tags: 
             - Commands
-    /command/actionRun:
+    /command/actionrun:
         get:
             summary:  Executes an action (bypasses filtering)
-            operationId: /command/actionRun
+            operationId: /command/actionrun
             parameters:
             - description: ID (from the Action configuration in the UI)
               in: query
