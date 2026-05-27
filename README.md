@@ -1,58 +1,46 @@
-# How to host Swagger API documentation with GitHub Pages
-[<img alt="The blog of Peter Evans: How to Host Swagger Documentation With Github Pages" title="View blog post" src="https://peterevans.dev/img/blog-published-badge.svg">](https://peterevans.dev/posts/how-to-host-swagger-docs-with-github-pages/)
+# Agent DVR — REST API
 
-This repository is a template for using the [Swagger UI](https://github.com/swagger-api/swagger-ui) to dynamically generate beautiful documentation for your API and host it for free with GitHub Pages.
+[Agent DVR](https://www.ispyconnect.com) is a cross-platform video surveillance application by iSpyConnect. It supports IP cameras, ONVIF devices, RTSP streams, USB cameras, and audio devices. Free for private local use; remote access, cloud storage, mobile apps, and business use require a subscription from $7.95/month. Runs on Windows 10+, macOS 11+, Linux (glibc 2.28+: Ubuntu 20.04+, Debian 10+, Fedora 29+, Arch), Docker, and Raspberry Pi 4+. Originally released as iSpy in 2007, rebuilt as Agent DVR in January 2022. 2M+ users worldwide.
 
-The template will periodically auto-update the Swagger UI dependency and create a pull request. See the [GitHub Actions workflow here](.github/workflows/update-swagger.yml).
+**[Download Agent DVR](https://www.ispyconnect.com/download)** · [Features](https://www.ispyconnect.com/features) · [Documentation](https://www.ispyconnect.com/docs/agent/) · [Pricing](https://www.ispyconnect.com/buy)
 
-The example API specification used by this repository can be seen hosted at [https://peter-evans.github.io/swagger-github-pages](https://peter-evans.github.io/swagger-github-pages/).
+---
 
-## Steps to use this template
+This repository contains the REST API reference for Agent DVR. The API allows you to control Agent DVR programmatically — manage cameras and microphones, trigger recordings, arm and disarm, retrieve snapshots and video clips, subscribe to events, and integrate with third-party systems.
 
-1. Click the `Use this template` button above to create a new repository from this template.
+**[→ View the full API reference](https://ispysoftware.github.io/Agent_API/)**
 
-2. Go to the settings for your repository at `https://github.com/{github-username}/{repository-name}/settings` and enable GitHub Pages.
+## Base URL
 
-    ![Headers](/screenshots/swagger-github-pages.png?raw=true)
-    
-3. Browse to the Swagger documentation at `https://{github-username}.github.io/{repository-name}/`.
+By default Agent DVR runs at:
+```
+http://localhost:8090
+```
 
+All API endpoints are relative to this base. When accessing Agent DVR remotely via the built-in relay, the base URL is provided in the web portal.
 
-## Steps to manually configure in your own repository
+## Authentication
 
-1. Download the latest stable release of the Swagger UI [here](https://github.com/swagger-api/swagger-ui/releases).
+API requests require a valid session token. Obtain one by posting credentials to `/account/login`. Pass the token in subsequent requests via the `session` query parameter or `Authorization` header.
 
-2. Extract the contents and copy the "dist" directory to the root of your repository.
+## Key endpoints
 
-3. Move the file "index.html" from the directory "dist" to the root of your repository.
-    ```
-    mv dist/index.html .
-    ```
-    
-4. Copy the YAML specification file for your API to the root of your repository.
+| Endpoint | Description |
+|---|---|
+| `GET /command` | Send a command to a camera or microphone |
+| `GET /cameras` | List all cameras |
+| `GET /microphones` | List all microphones |
+| `GET /grab` | Get a snapshot from a camera |
+| `POST /account/login` | Authenticate and obtain a session token |
 
-5. Edit [dist/swagger-initializer.js](dist/swagger-initializer.js) and change the `url` property to reference your local YAML file. 
-    ```javascript
-        window.ui = SwaggerUIBundle({
-            url: "swagger.yaml",
-        ...
-    ```
-    Then fix any references to files in the "dist" directory.
-    ```html
-    ...
-    <link rel="stylesheet" type="text/css" href="dist/swagger-ui.css" >
-    <link rel="icon" type="image/png" href="dist/favicon-32x32.png" sizes="32x32" />
-    <link rel="icon" type="image/png" href="dist/favicon-16x16.png" sizes="16x16" />    
-    ...
-    <script src="dist/swagger-ui-bundle.js"> </script>
-    <script src="dist/swagger-ui-standalone-preset.js"> </script>    
-    ...
-    ```
-    
-6. Go to the settings for your repository at `https://github.com/{github-username}/{repository-name}/settings` and enable GitHub Pages.
+Full endpoint reference with parameters and response schemas: [ispysoftware.github.io/Agent_API](https://ispysoftware.github.io/Agent_API/)
 
-    ![Headers](/screenshots/swagger-github-pages.png?raw=true)
-    
-7. Browse to the Swagger documentation at `https://{github-username}.github.io/{repository-name}/`.
+## SDKs and integrations
 
-   The example API specification used by this repository can be seen hosted at [https://peter-evans.github.io/swagger-github-pages](https://peter-evans.github.io/swagger-github-pages/).
+- **Home Assistant** — native integration, no API key required: [HACS Agent DVR integration](https://github.com/ispysoftware/agent-dvr-home-assistant)
+- **REST clients** — any HTTP client works; the API returns JSON
+- **MQTT** — Agent DVR can publish events to an MQTT broker for integration with home automation systems
+
+## Local development
+
+Agent DVR must be running locally or remotely to use the API. [Download Agent DVR](https://www.ispyconnect.com/download) to get started.
