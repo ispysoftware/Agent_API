@@ -4,11 +4,17 @@ on:
     - cron:  '0 10 * * *'
   workflow_dispatch:
 
+# ADDED: Explicit permissions for the GITHUB_TOKEN to create/update PRs
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   updateSwagger:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4 # Upgraded from v3
+
       - name: Get Latest Swagger UI Release
         id: swagger-ui
         run: |
@@ -16,6 +22,7 @@ jobs:
           echo "release_tag=$release_tag" >> $GITHUB_OUTPUT
           current_tag=$(<swagger-ui.version)
           echo "current_tag=$current_tag" >> $GITHUB_OUTPUT
+
       - name: Update Swagger UI
         if: steps.swagger-ui.outputs.current_tag != steps.swagger-ui.outputs.release_tag
         env:
@@ -38,8 +45,9 @@ jobs:
           sed -i "s|href=\"index|href=\"dist/index|g" index.html
           # Update current release
           echo ${{ steps.swagger-ui.outputs.release_tag }} > swagger-ui.version
+
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v6 # Upgraded from v4
         with:
           commit-message: Update swagger-ui to ${{ steps.swagger-ui.outputs.release_tag }}
           title: Update SwaggerUI to ${{ steps.swagger-ui.outputs.release_tag }}
