@@ -1014,6 +1014,83 @@ paths:
                     description: ping
             tags: 
             - Commands
+    /command/ptzpresets:
+        get:
+            summary: List the camera PTZ presets (7.7.8.0+)
+            operationId: /command/ptzpresets
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID (cameras only)
+              enum:
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Returns the camera's PTZ presets as {"presets":[{"name":...,"token":...}],"active":...}. "active" is the last preset Agent applied, or null if the camera has moved since or none was applied. (v7.7.8.0+)
+            tags: 
+            - Commands
+    /command/getptzpreset:
+        get:
+            summary: Get the active PTZ preset (7.7.8.0+)
+            operationId: /command/getptzpreset
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID (cameras only)
+              enum:
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Returns {"preset":"Home"} - the last preset Agent applied to the camera, or null if the camera has moved since (or the camera was moved outside of Agent). (v7.7.8.0+)
+            tags: 
+            - Commands
+    /command/ptzpreset:
+        get:
+            summary: Move the camera to a PTZ preset by name (7.7.8.0+)
+            operationId: /command/ptzpreset
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID (cameras only)
+              enum:
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            - description: Preset name or token (from ptzpresets)
+              in: query
+              name: preset
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Applies the named preset. Returns an error if no preset matches (v7.7.8.0+; older versions returned ok regardless).
+            tags: 
+            - Commands
     /command/ptzscheduleon:
         get:
             summary: enable the ptz scheduler or enable a specific ptz schedule entry (5.9.4.0+)
