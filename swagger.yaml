@@ -381,6 +381,23 @@ paths:
                     description: Arm the system and enable alerts on groups of devices
             tags: 
             - Commands
+    /command/broadcast:
+        get:
+            summary: Send a broadcast message to all connected clients (7910+)
+            operationId: /command/broadcast
+            parameters:
+            - description: text to display
+              in: query
+              name: text
+              required: true
+              type: string
+            produces:
+              - application/json
+            responses:
+              "200":
+                  description: Message sent
+            tags:
+            - Commands
     /command/disarmgroups:
         get:
             summary: Disarm groups of devices (disable alerts)
