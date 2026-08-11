@@ -2226,6 +2226,11 @@ paths:
               name: recfps
               required: false
               type: int
+            - description: notes
+              in: query
+              name: name
+              required: false
+              type: string
             produces:
                 - application/json
             responses:
@@ -2298,6 +2303,11 @@ paths:
               name: recfps
               required: false
               type: int
+            - description: notes
+              in: query
+              name: name
+              required: false
+              type: string
             produces:
                 - application/json
             responses:
