@@ -1417,7 +1417,7 @@ paths:
               name: ot
               required: true
               type: integer
-            - description: "State: None = disabled, Monitor = enabled with no motion detection, Modect = enabled with record on detect, Redect = enabled with forced recording and motion detection, Record = enabled with forced recording and no motion detection. Values are case sensitive for microphones; cameras accept any case."
+            - description: "State: None = disabled, Monitor = enabled with no motion detection, Modect = enabled with record on detect, Redect = enabled with forced recording and motion detection, Record = enabled with forced recording and no motion detection. Values are case insensitive."
               enum:
               - None
               - Monitor
