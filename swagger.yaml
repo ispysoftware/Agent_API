@@ -2388,8 +2388,38 @@ paths:
             responses:
                 "200":
                     description: Purges all recordings (deletes) for the control
-            tags: 
+            tags:
             - Commands
+    /eventcounts.json:
+        get:
+            summary: Returns the number of events recorded for the device within the last secs seconds
+            operationId: eventcounts.json
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            - description: Look-back window in seconds (default 60). Use 86400 for a 24 hour count.
+              in: query
+              name: secs
+              required: false
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"count":n} - the number of events recorded for the device within the look-back window'
+            tags:
+            - Query
     /fileThumb.jpg:
         get:
             summary: Returns a thumbnail image for the specified recording and filename
@@ -2520,6 +2550,11 @@ paths:
               name: oid
               required: true
               type: integer
+            - description: Move the camera to a PTZ preset by name (see /command/ptzpresets). Returns an error if no preset matches.
+              in: query
+              name: preset
+              required: false
+              type: string
             - description: Command (the url encoded portion in the extended commands options from the PTZ2.xml)
               in: query
               name: cmd
@@ -2541,6 +2576,11 @@ paths:
               - 11
               in: query
               name: dir
+              required: false
+              type: integer
+            - description: Duration in milliseconds. Only used with dir - the server automatically issues a stop command this many milliseconds after the move starts, so callers don't need their own stop timer.
+              in: query
+              name: dur
               required: false
               type: integer
             produces:
