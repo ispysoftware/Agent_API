@@ -93,7 +93,24 @@ paths:
             responses:
                 "200":
                     description: Returns live audio from the specified microphone in ogg format
-            tags: 
+            tags:
+            - Audio
+    /audio.wav:
+        get:
+            summary: Returns live audio from the specified microphone in wav format
+            operationId: audio.wav
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            produces:
+                - audio/wav
+            responses:
+                "200":
+                    description: Returns live audio from the specified microphone in wav format
+            tags:
             - Audio
     /command/addfolder:
         get:
@@ -351,7 +368,36 @@ paths:
             responses:
                 "200":
                     description: Apply schedule to device.
-            tags: 
+            tags:
+            - Commands
+    /command/areaapply:
+        get:
+            summary: Apply a named detection zone map to a camera
+            operationId: /command/areaapply
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID (cameras only)
+              enum:
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            - description: Name of the zone map entry (as configured under detector zones in the UI)
+              in: query
+              name: name
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Applies the named detection zone map to the camera. Returns an error if no zone map matches.
+            tags:
             - Commands
     /command/arm:
         get:
@@ -1351,7 +1397,43 @@ paths:
             responses:
                 "200":
                     description: Set the sensitivity for the device
-            tags: 
+            tags:
+            - Commands
+    /command/setObjectState:
+        get:
+            summary: Set the run state of a device (ZoneMinder-style function)
+            operationId: /command/setObjectState
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            - description: "State: None = disabled, Monitor = enabled with no motion detection, Modect = enabled with record on detect, Redect = enabled with forced recording and motion detection, Record = enabled with forced recording and no motion detection. Values are case sensitive for microphones; cameras accept any case."
+              enum:
+              - None
+              - Monitor
+              - Modect
+              - Redect
+              - Record
+              in: query
+              name: state
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Sets the device state. The current state is returned as the "function" field by getObject/getObjects.
+            tags:
             - Commands
     /command/soundon:
         get:
@@ -1431,7 +1513,41 @@ paths:
             responses:
                 "200":
                     description: Change the timestamp display on the camera
-            tags: 
+            tags:
+            - Commands
+    /command/setUri:
+        get:
+            summary: Change the stream URLs of a camera
+            operationId: /command/setUri
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID (cameras only)
+              enum:
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            - description: URL for the live (sub) stream
+              in: query
+              name: live
+              required: false
+              type: string
+            - description: URL for the record (main) stream
+              in: query
+              name: record
+              required: false
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Updates the camera's stream URLs. The camera restarts if a URL changed.
+            tags:
             - Commands
     /command/start-rtmp:
         get:
@@ -1634,31 +1750,6 @@ paths:
                     description: Trigger object recognition for the device.
             tags: 
             - Commands
-    /command/triggerScene:
-        get:
-            summary: Trigger scene recognition for the device
-            operationId: /command/triggerScene
-            parameters:
-            - description: Object ID
-              in: query
-              name: oid
-              required: true
-              type: integer
-            - description: Object TypeID
-              enum:
-              - 1
-              - 2
-              in: query
-              name: ot
-              required: true
-              type: integer
-            produces:
-                - application/json
-            responses:
-                "200":
-                    description: Trigger scene recognition for the device.
-            tags: 
-            - Commands
     /command/triggerAskAI:
         get:
             summary: Trigger ask AI for the device
@@ -1787,7 +1878,32 @@ paths:
             responses:
                 "200":
                     description: Turn recording off for the device.
-            tags: 
+            tags:
+            - Commands
+    /command/recordConstant:
+        get:
+            summary: Set the recording mode to constant recording for the device.
+            operationId: /command/recordConstant
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Set the recording mode to constant recording for the device.
+            tags:
             - Commands
     /command/recordOnAlertOn:
         get:
@@ -2013,7 +2129,24 @@ paths:
             responses:
                 "200":
                     description: Apply the specified profile with an index.
-            tags: 
+            tags:
+            - Commands
+    /command/setProfileByName:
+        get:
+            summary: Apply the specified profile by name.
+            operationId: /command/setProfileByName
+            parameters:
+            - description: Profile name (case insensitive)
+              in: query
+              name: name
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Apply the specified profile by name.
+            tags:
             - Commands
     /command/snapshot:
         get:
@@ -2091,7 +2224,103 @@ paths:
             responses:
                 "200":
                     description: Switch on the device.
-            tags: 
+            tags:
+            - Commands
+    /command/timelapseOn:
+        get:
+            summary: Turn timelapse on for the camera.
+            operationId: /command/timelapseOn
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID (cameras only)
+              enum:
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn timelapse on for the camera.
+            tags:
+            - Commands
+    /command/timelapseOff:
+        get:
+            summary: Turn timelapse off for the camera.
+            operationId: /command/timelapseOff
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID (cameras only)
+              enum:
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn timelapse off for the camera.
+            tags:
+            - Commands
+    /command/gpuEncodeOn:
+        get:
+            summary: Turn GPU encoding on for the camera.
+            operationId: /command/gpuEncodeOn
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID (cameras only)
+              enum:
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn GPU encoding on for the camera.
+            tags:
+            - Commands
+    /command/gpuEncodeOff:
+        get:
+            summary: Turn GPU encoding off for the camera.
+            operationId: /command/gpuEncodeOff
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID (cameras only)
+              enum:
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Turn GPU encoding off for the camera.
+            tags:
             - Commands
     /command/unblockExternal:
         get:
@@ -2179,7 +2408,7 @@ paths:
               in: query
               name: oid
               required: false
-              type: int
+              type: integer
             - description: Object TypeID (=2 for camera)
               enum:
               - 1
@@ -2217,35 +2446,35 @@ paths:
               in: query
               name: alerts
               required: false
-              type: int
+              type: integer
             - description: recording enabled (1 or 0)
               in: query
               name: record
               required: false
-              type: int
+              type: integer
             - description: resize enabled (1 or 0)
               in: query
               name: resize
               required: false
-              type: int
+              type: integer
             - description: raw record enabled (1 or 0)
               in: query
               name: raw
               required: false
-              type: int
+              type: integer
             - description: display FPS limit
               in: query
               name: fps
               required: false
-              type: int
+              type: integer
             - description: record FPS limit
               in: query
               name: recfps
               required: false
-              type: int
+              type: integer
             - description: notes
               in: query
-              name: name
+              name: notes
               required: false
               type: string
             produces:
@@ -2274,12 +2503,12 @@ paths:
               in: query
               name: substream
               required: false
-              type: int
+              type: integer
             - description: Profile index for the record stream (1)
               in: query
               name: mainstream
               required: false
-              type: int
+              type: integer
             - description: Camera username
               in: query
               name: username
@@ -2294,35 +2523,35 @@ paths:
               in: query
               name: alerts
               required: false
-              type: int
+              type: integer
             - description: recording enabled (1 or 0)
               in: query
               name: record
               required: false
-              type: int
+              type: integer
             - description: resize enabled (1 or 0)
               in: query
               name: resize
               required: false
-              type: int
+              type: integer
             - description: raw record enabled (1 or 0)
               in: query
               name: raw
               required: false
-              type: int
+              type: integer
             - description: display FPS limit
               in: query
               name: fps
               required: false
-              type: int
+              type: integer
             - description: record FPS limit
               in: query
               name: recfps
               required: false
-              type: int
+              type: integer
             - description: notes
               in: query
-              name: name
+              name: notes
               required: false
               type: string
             produces:
@@ -2521,7 +2750,29 @@ paths:
             responses:
                 "200":
                     description: Returns a thumbnail image for the specified object and filename
-            tags: 
+            tags:
+            - Media
+    /liveimage.jpg:
+        get:
+            summary: Returns a live frame from the specified camera
+            operationId: liveimage.jpg
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Size (320x240)
+              in: query
+              name: size
+              required: false
+              type: string
+            produces:
+                - image/jpeg
+            responses:
+                "200":
+                    description: Returns a live frame from the specified camera
+            tags:
             - Media
     /photo.jpg:
         get:
@@ -2608,9 +2859,9 @@ paths:
               name: ot
               required: true
               type: integer
-            - description: End Date
+            - description: End Date (pass the last received timestamp to page through results)
               in: query
-              name: oid
+              name: enddate
               required: false
               type: integer
             produces:
