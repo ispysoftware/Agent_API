@@ -189,9 +189,9 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: use the optional fields to customise the data
-            tags: 
-            - Commands    
+                    description: Copies (or moves) the file into the device's folder and registers it in the database so it appears in the UI. The source must be an mp3, mp4 or mkv file. Use the optional fields to set the filename, timestamp, tags and conversion behaviour. Returns an error if conversion fails or the target file already exists.
+            tags:
+            - Commands
     /command/alert:
         get:
             summary: Trigger alert on the device.
@@ -229,8 +229,8 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: alert
-            tags: 
+                    description: Triggers an alert on the device, running any configured alert actions. The optional tag, AI JSON and message are passed on to those actions and stored with any associated recording.
+            tags:
             - Commands
     /command/alertOff:
         get:
@@ -284,24 +284,24 @@ paths:
             - Commands
     /command/allOff:
         get:
-            summary: allOff
+            summary: Switch all devices off
             operationId: /command/allOff
             produces:
                 - application/json
             responses:
                 "200":
-                    description: allOff
+                    description: Switches every device (all cameras and microphones) off.
             tags: 
             - Commands
     /command/allOn:
         get:
-            summary: allOn
+            summary: Switch all devices on
             operationId: /command/allOn
             produces:
                 - application/json
             responses:
                 "200":
-                    description: allOn
+                    description: Switches every device (all cameras and microphones) on.
             tags: 
             - Commands
     /command/appendtimestamp:
@@ -331,8 +331,8 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: alert
-            tags: 
+                    description: Appends the text to the device's default timestamp display.
+            tags:
             - Commands
     /command/applySchedule:
         get:
@@ -403,11 +403,17 @@ paths:
         get:
             summary: Arm the system.
             operationId: /command/arm
+            parameters:
+            - description: Optionally disarm after a delay (minutes)
+              in: query
+              name: disarmdelay
+              required: false
+              type: integer
             produces:
                 - application/json
             responses:
                 "200":
-                    description: Arm the system.
+                    description: Arms the system, enabling alerts on armed devices.
             tags: 
             - Commands
     /command/armgroups:
@@ -420,11 +426,16 @@ paths:
               name: groups
               required: true
               type: string
+            - description: Optionally disarm the groups after a delay (minutes)
+              in: query
+              name: disarmdelay
+              required: false
+              type: integer
             produces:
                 - application/json
             responses:
                 "200":
-                    description: Arm the system and enable alerts on groups of devices
+                    description: Arms the system and enables alerts on the specified groups of devices.
             tags: 
             - Commands
     /command/broadcast:
@@ -454,11 +465,16 @@ paths:
               name: groups
               required: true
               type: string
+            - description: Optionally re-arm the groups after a delay (minutes)
+              in: query
+              name: armdelay
+              required: false
+              type: integer
             produces:
                 - application/json
             responses:
                 "200":
-                    description: Disarm the system and enable alerts on groups of devices
+                    description: Disables alerts on the specified groups of devices. Does not change the system armed state.
             tags: 
             - Commands
     /command/armProfile:
@@ -708,18 +724,24 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: Trigger detection for the device.
-            tags: 
+                    description: Triggers the device's detector as if motion or sound was detected, running any detection-based actions and recording.
+            tags:
             - Commands
     /command/disarm:
         get:
             summary: Disarm the system.
             operationId: /command/disarm
+            parameters:
+            - description: Optionally re-arm after a delay (minutes)
+              in: query
+              name: armdelay
+              required: false
+              type: integer
             produces:
                 - application/json
             responses:
                 "200":
-                    description: Disarm the system.
+                    description: Disarms the system, disabling alerts.
             tags: 
             - Commands
     /command/facedetecton:
@@ -919,40 +941,40 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: Get object by ID.
-            tags: 
+                    description: Returns the configuration JSON for the specified device, including its name, group, state and settings.
+            tags:
             - Commands
     /command/getObjects:
         get:
-            summary: getObjects
+            summary: Get the configuration of all devices
             operationId: /command/getObjects
             produces:
                 - application/json
             responses:
                 "200":
-                    description: getObjects
+                    description: Returns JSON describing every configured device on the system (cameras and microphones) including id, name, group and current state.
             tags: 
             - Commands
     /command/getProfiles:
         get:
-            summary: getProfiles
+            summary: List the configured profiles
             operationId: /command/getProfiles
             produces:
                 - application/json
             responses:
                 "200":
-                    description: getProfiles
+                    description: 'Returns the configured profiles as {"profiles":[...]}. Use the index with setProfile, armProfile or disarmProfile.'
             tags: 
             - Commands
     /command/getStatus:
         get:
-            summary: getStatus
+            summary: Get the server status
             operationId: /command/getStatus
             produces:
                 - application/json
             responses:
                 "200":
-                    description: getStatus
+                    description: 'Returns server status JSON: armed state, device count, active device count, number of devices recording, remote access status, unique server ID, machine name, version and server timestamp.'
             tags: 
             - Commands
     /command/getSystemStats:
@@ -963,8 +985,8 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: cpu/ memory and disk space
-            tags: 
+                    description: 'Returns CPU, memory and disk usage for the server: cpu_used, ram_free and disk_free strings plus numeric cpup, ramp, ramu, diskp and per-disk stats in disks.'
+            tags:
             - Commands
     /command/lpron:
         get:
@@ -1068,13 +1090,13 @@ paths:
             - Commands
     /command/ping:
         get:
-            summary: ping
+            summary: Check the server is running
             operationId: /command/ping
             produces:
                 - application/json
             responses:
                 "200":
-                    description: ping
+                    description: 'Returns {"status":"ok"} if the server is running. Use as a lightweight health check.'
             tags: 
             - Commands
     /command/ptzpresets:
@@ -1232,11 +1254,16 @@ paths:
               name: ot
               required: true
               type: integer
+            - description: Optional tag to store with the recording (csv)
+              in: query
+              name: tag
+              required: false
+              type: string
             produces:
                 - application/json
             responses:
                 "200":
-                    description: Start recording for the device.
+                    description: Starts recording on the device. Recording continues until recordStop is called or the maximum recording duration is reached.
             tags: 
             - Commands
     /command/recordRestart:
@@ -1823,11 +1850,16 @@ paths:
               name: ot
               required: true
               type: integer
+            - description: Optional timeout in seconds. Overrides the device's configured Trigger Timeout for this call.
+              in: query
+              name: timeout
+              required: false
+              type: integer
             produces:
                 - application/json
             responses:
                 "200":
-                    description: Trigger temporary recording for the device.
+                    description: Triggers temporary recording for the device, stopping when the timeout expires.
             tags: 
             - Commands
     /command/recordStop:
@@ -1848,11 +1880,16 @@ paths:
               name: ot
               required: true
               type: integer
+            - description: Optional tag to store with the recording (csv)
+              in: query
+              name: tag
+              required: false
+              type: string
             produces:
                 - application/json
             responses:
                 "200":
-                    description: Stop recording for the device.
+                    description: Stops the current recording on the device.
             tags: 
             - Commands
     /command/recordingOff:
@@ -1877,7 +1914,7 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: Turn recording off for the device.
+                    description: Sets the device's recording mode to manual - it will no longer record automatically on detection or alert, only when recording is started via the API or UI.
             tags:
             - Commands
     /command/recordConstant:
@@ -1957,46 +1994,52 @@ paths:
             - Commands
     /command/reloadConfig:
         get:
-            summary: reloadConfig
+            summary: Reload the server configuration from disk
             operationId: /command/reloadConfig
             produces:
                 - application/json
             responses:
                 "200":
-                    description: reloadConfig
+                    description: Reloads the main configuration and the device list from disk and tells all connected clients to refresh. Use after editing the configuration files directly.
             tags: 
             - Commands
     /command/reloadObjects:
         get:
-            summary: reloadObjects
+            summary: Reload the device list
             operationId: /command/reloadObjects
             produces:
                 - application/json
             responses:
                 "200":
-                    description: reloadObjects
+                    description: Reloads the device list (cameras and microphones) from the configuration and tells all connected clients to refresh.
             tags: 
             - Commands
     /command/restart:
         get:
-            summary: restart
+            summary: Restart the Agent DVR service
             operationId: /command/restart
             produces:
                 - application/json
             responses:
                 "200":
-                    description: restart
+                    description: Shuts down and restarts the Agent DVR service. The API will be unavailable while it restarts.
             tags: 
             - Commands
     /command/rtmpStop:
         get:
-            summary: rtmpStop
+            summary: Stop RTMP streaming
             operationId: /command/rtmpStop
+            parameters:
+            - description: Identifier of the RTMP server (from getStreamingStatus). Omit to stop streaming to all RTMP servers.
+              in: query
+              name: ident
+              required: false
+              type: string
             produces:
                 - application/json
             responses:
                 "200":
-                    description: rtmpStop
+                    description: Stops streaming to the specified RTMP server, or to all RTMP servers if ident is omitted.
             tags: 
             - Commands
     /command/runStorageMgmt:
@@ -2150,7 +2193,7 @@ paths:
             - Commands
     /command/snapshot:
         get:
-            summary: Take a photo on a device
+            summary: Take a photo on a camera
             operationId: /command/snapshot
             parameters:
             - description: Object ID
@@ -2162,18 +2205,18 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: Took a photo
-            tags: 
+                    description: Takes a photo from the camera's live feed and saves it to the camera's grabs folder (available under Photos in the UI and via getCameraGrabs).
+            tags:
             - Commands
     /command/stopCloudUploads:
         get:
-            summary: stopCloudUploads
+            summary: Cancel all pending cloud uploads
             operationId: /command/stopCloudUploads
             produces:
                 - application/json
             responses:
                 "200":
-                    description: stopCloudUploads
+                    description: Cancels all queued and in-progress uploads to cloud storage providers.
             tags: 
             - Commands
     /command/switchOff:
@@ -2481,8 +2524,8 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: Adds a camera
-            tags: 
+                    description: 'Adds (or updates, if oid was provided) the camera and enables it. Returns {"status":"ok","oid":n,"ot":2} with the camera''s object ID.'
+            tags:
             - Commands
     /command/addOnvif:
         get:
@@ -2558,8 +2601,8 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: Adds a camera
-            tags: 
+                    description: 'Adds the ONVIF camera and enables it. Returns {"status":"ok","oid":n,"ot":2} with the new camera''s object ID, or an error if the URI is missing.'
+            tags:
             - Commands
     /command/switchDetector:
         get:
@@ -2596,7 +2639,7 @@ paths:
             - Commands           
     /command/purge:
         get:
-            summary: 'Purge the control''s folder of all content (4.7.7.0+)'
+            summary: 'Delete all recorded content for the device (4.7.7.0+)'
             operationId: /command/purge
             parameters:
             - description: Object ID
@@ -2616,7 +2659,7 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: Purges all recordings (deletes) for the control
+                    description: Permanently deletes all recordings for the device from disk and the database.
             tags:
             - Commands
     /eventcounts.json:
@@ -2838,8 +2881,8 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: OK
-            tags: 
+                    description: Executes the PTZ command on the camera. Provide one of preset, cmd or dir per call.
+            tags:
             - PTZ
     /q/getCameraGrabs:
         get:
@@ -2893,8 +2936,8 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: Audio level where 1 is max and 0 is min
-            tags: 
+                    description: 'Returns {"level":n} where n is between 0 (silence/no motion) and 1 (maximum). For cameras this is the current motion detector level; for microphones it is the audio level and the response also includes a "dB" field.'
+            tags:
             - Query
     /q/getSessionCount:
         get:
@@ -2904,9 +2947,9 @@ paths:
                 - application/json
             responses:
                 "200":
-                  description: OK
-            tags: 
-            - Queries
+                  description: Returns the number of client sessions currently connected to the server.
+            tags:
+            - Query
     /q/getStreamingStatus:
         get:
             summary: Get a JSON list of configured RTMP servers (with status). This provides an ident field you use in subsequent requests.
@@ -2915,9 +2958,9 @@ paths:
                 - application/json
             responses:
                 "200":
-                  description: Get a JSON list of configured RTMP servers (with status). This provides an ident field you use in subsequent requests.
-            tags: 
-            - Queries
+                  description: Returns a JSON list of the configured RTMP servers with their current status. Use the ident field with start-rtmp, stop-rtmp and rtmpStop.
+            tags:
+            - Query
     /q/getGraph:
         get:
             summary: "Get a JSON description of the file with a motion graph array and tag information (including timestamps)"
@@ -3035,7 +3078,7 @@ paths:
             - Media
     /video.mjpg:
         get:
-            description: Grid of cameras
+            summary: Returns live video of one or more cameras as an MJPEG stream
             operationId: video.mjpg
             parameters:
             - description: Object IDs (1,2,3,4)
@@ -3114,7 +3157,7 @@ paths:
             - Media
     /video.webm:
         get:
-            summary: Returns a grid of cameras in mp4 form (the first camera with audio provides the audio stream)
+            summary: Returns a grid of cameras in webm form (the first camera with audio provides the audio stream)
             operationId: video.webm
             parameters:
             - description: Object IDs (1,2,3,4)
@@ -3138,11 +3181,11 @@ paths:
               required: false
               type: integer
             produces:
-                - video/mp4
+                - video/webm
             responses:
                 "200":
-                    description: Returns a grid of cameras in mp4 form (the first camera with audio provides the audio stream)
-            tags: 
+                    description: Returns a grid of cameras in webm form (the first camera with audio provides the audio stream)
+            tags:
             - Media
 produces:
     - application/json
