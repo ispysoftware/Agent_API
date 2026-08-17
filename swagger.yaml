@@ -1830,7 +1830,92 @@ paths:
             responses:
                 "200":
                     description: Trigger a task on the device
-            tags: 
+            tags:
+            - Commands
+    /q/getTasks:
+        get:
+            summary: Returns the list of tasks defined on the device
+            operationId: /q/getTasks
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"elements":[{"text":"Task name","value":"Task name"},...]} listing the tasks defined on the device. Run a task with /command/triggerTask.'
+            tags:
+            - Commands
+    /q/taskAdd:
+        get:
+            summary: Add a task to the device
+            operationId: /q/taskAdd
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            - description: Task name
+              in: query
+              name: name
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Add a task with the specified name to the device. Configure what the task does by adding actions to it (Actions with the mode set to the task name). Run it with /command/triggerTask.
+            tags:
+            - Commands
+    /q/taskDelete:
+        get:
+            summary: Remove a task from the device
+            operationId: /q/taskDelete
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            - description: Task name
+              in: query
+              name: value
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Remove the task with the specified name from the device
+            tags:
             - Commands
     /command/triggerRecord:
         get:
