@@ -1832,6 +1832,37 @@ paths:
                     description: Trigger a task on the device
             tags:
             - Commands
+    /command/pluginCommand:
+        get:
+            summary: Send a command to the plugin configured on a device
+            description: "Calls Command(string) on the plugin attached to the device (set under the Plugins tab when editing the device). The command string is defined by the plugin - see the plugin's documentation. The plugin returns JSON; by convention 'msg' is a human readable result and any other fields are plugin specific. Errors: DeviceNotFound (bad oid/ot), DeviceDisabled (device switched off), FeatureNotConfigured (no plugin on the device), CommandFailed (plugin did not recognise the command or does not implement Command)."
+            operationId: /command/pluginCommand
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            - description: Plugin-defined command string, e.g. reset, status, volume:75
+              in: query
+              name: command
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: JSON returned by the plugin, e.g. {"msg":"Volume set to 75"}
+            tags:
+            - Commands
     /q/getTasks:
         get:
             summary: Returns the list of tasks defined on the device
