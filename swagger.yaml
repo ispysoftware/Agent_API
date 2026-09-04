@@ -322,16 +322,16 @@ paths:
               name: ot
               required: true
               type: integer
-            - description: text to append
+            - description: text to append (pass an empty value to remove previously appended text)
               in: query
               name: text
-              required: true
+              required: false
               type: string
             produces:
                 - application/json
             responses:
                 "200":
-                    description: Appends the text to the device's default timestamp display.
+                    description: Appends the text after the device's timestamp display. The appended text is saved and persists until it is replaced, cleared with an empty value, or a new formatter is set with settimestamp.
             tags:
             - Commands
     /command/applySchedule:
@@ -1530,7 +1530,7 @@ paths:
               name: ot
               required: true
               type: integer
-            - description: Text
+            - description: Timestamp formatter, e.g. {FPS} {0:G} {NAME}
               in: query
               name: text
               required: true
@@ -1539,7 +1539,7 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: Change the timestamp display on the camera
+                    description: Replaces the camera's timestamp formatter and clears any text previously added with appendtimestamp. The change is saved to the camera's settings.
             tags:
             - Commands
     /command/setUri:
