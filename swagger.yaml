@@ -5,7 +5,7 @@ info:
     \ AgentDVR at [https://www.ispyconnect.com](https://www.ispyconnect.com)\
     \ This interface uses the default API endpoint of http://localhost:8090. You will need Agent DVR installed and running to use it. Many of the commands below take an Object ID and an Object Type ID. The Object ID is displayed in Agent's UI when you edit the device at the top left. For example if it says 1: Home Cam then your Object ID is 1. The Object Type ID is 1 for Microphones and 2 for cameras. You can also provide a group parameter instead of object id and type id - this will then apply the command to all devices that are in that group (on the General tab when you edit the device). Some commands can be called with neither id or group and will then apply to every device on the system."
   title: 'Agent DVR'
-  version: "7.9.6.0"
+  version: "8.0.4.0"
   termsOfService: "https://www.ispyconnect.com/terms.aspx"
   license:
     name: "Apache 2.0"
@@ -286,23 +286,45 @@ paths:
         get:
             summary: Switch all devices off
             operationId: /command/allOff
+            parameters:
+            - description: Only switch off devices in these access groups (csv, case insensitive)
+              in: query
+              name: group
+              required: false
+              type: string
+            - description: Only switch off devices at this location (case insensitive)
+              in: query
+              name: location
+              required: false
+              type: string
             produces:
                 - application/json
             responses:
                 "200":
-                    description: Switches every device (all cameras and microphones) off.
-            tags: 
+                    description: Switches every device (all cameras and microphones) off, or only those matching group/location.
+            tags:
             - Commands
     /command/allOn:
         get:
             summary: Switch all devices on
             operationId: /command/allOn
+            parameters:
+            - description: Only switch on devices in these access groups (csv, case insensitive)
+              in: query
+              name: group
+              required: false
+              type: string
+            - description: Only switch on devices at this location (case insensitive)
+              in: query
+              name: location
+              required: false
+              type: string
             produces:
                 - application/json
             responses:
                 "200":
-                    description: Switches every device (all cameras and microphones) on.
-            tags: 
+                    description: Switches every device (all cameras and microphones) on, or only those matching group/location.
+            tags:
             - Commands
     /command/appendtimestamp:
         get:
@@ -338,22 +360,33 @@ paths:
         get:
             summary: Apply schedule to all devices.
             operationId: /command/applySchedule
+            parameters:
+            - description: Only apply to devices in these access groups (csv, case insensitive)
+              in: query
+              name: group
+              required: false
+              type: string
+            - description: Only apply to devices at this location (case insensitive)
+              in: query
+              name: location
+              required: false
+              type: string
             produces:
                 - application/json
             responses:
                 "200":
-                    description: Apply schedule to all devices.
-            tags: 
+                    description: Apply schedule to all devices, or only to the devices matching group/location. Devices with their schedule switched off are skipped.
+            tags:
             - Commands
     /command/applyScheduleToDevice:
         get:
-            summary: Apply schedule to device.
+            summary: Apply schedule to a device, group or location.
             operationId: /command/applyScheduleToDevice
             parameters:
-            - description: Object ID
+            - description: Object ID. Omit to target by group/location instead.
               in: query
               name: oid
-              required: true
+              required: false
               type: integer
             - description: Object TypeID
               enum:
@@ -361,13 +394,23 @@ paths:
               - 2
               in: query
               name: ot
-              required: true
+              required: false
               type: integer
+            - description: Target devices in these access groups (csv, case insensitive)
+              in: query
+              name: group
+              required: false
+              type: string
+            - description: Target devices at this location (case insensitive)
+              in: query
+              name: location
+              required: false
+              type: string
             produces:
                 - application/json
             responses:
                 "200":
-                    description: Apply schedule to device.
+                    description: Applies the schedule to the targeted devices. Devices with their schedule switched off are skipped.
             tags:
             - Commands
     /command/areaapply:
@@ -2221,13 +2264,13 @@ paths:
             - Commands
     /command/scheduleOff:
         get:
-            summary: Turn schedule off for the device.
+            summary: Turn schedule off for a device, group or location.
             operationId: /command/scheduleOff
             parameters:
-            - description: Object ID
+            - description: Object ID. Omit to target by group/location instead, or all devices if neither is given.
               in: query
               name: oid
-              required: true
+              required: false
               type: integer
             - description: Object TypeID
               enum:
@@ -2235,24 +2278,34 @@ paths:
               - 2
               in: query
               name: ot
-              required: true
+              required: false
               type: integer
+            - description: Target devices in these access groups (csv, case insensitive)
+              in: query
+              name: group
+              required: false
+              type: string
+            - description: Target devices at this location (case insensitive)
+              in: query
+              name: location
+              required: false
+              type: string
             produces:
                 - application/json
             responses:
                 "200":
-                    description: Turn schedule off for the device.
-            tags: 
+                    description: Turns the schedule off. A device with its schedule off is left alone by the automatic scheduler and by applySchedule.
+            tags:
             - Commands
     /command/scheduleOn:
         get:
-            summary: Turn schedule on for the device.
+            summary: Turn schedule on for a device, group or location.
             operationId: /command/scheduleOn
             parameters:
-            - description: Object ID
+            - description: Object ID. Omit to target by group/location instead, or all devices if neither is given.
               in: query
               name: oid
-              required: true
+              required: false
               type: integer
             - description: Object TypeID
               enum:
@@ -2260,14 +2313,24 @@ paths:
               - 2
               in: query
               name: ot
-              required: true
+              required: false
               type: integer
+            - description: Target devices in these access groups (csv, case insensitive)
+              in: query
+              name: group
+              required: false
+              type: string
+            - description: Target devices at this location (case insensitive)
+              in: query
+              name: location
+              required: false
+              type: string
             produces:
                 - application/json
             responses:
                 "200":
-                    description: Turn schedule on for the device.
-            tags: 
+                    description: Turn schedule on for the targeted devices.
+            tags:
             - Commands
     /command/setProfile:
         get:
