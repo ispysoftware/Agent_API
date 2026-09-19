@@ -174,6 +174,9 @@ definitions:
                     airate:
                         type: integer
                         description: Most AI calls per hour for a gated rule. Default 30, maximum 600.
+                    cooldown:
+                        type: integer
+                        description: Least number of seconds between two runs (the action's Repeat Timeout). A detector raises its event on every cycle while the thing is in view, so without it "every time" means dozens of runs a minute. Default 60 for rules that only notify, 30 for rules that act, 0 for timed rules. Maximum 86400.
                     per:
                         type: string
                         enum:
