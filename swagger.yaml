@@ -49,8 +49,8 @@ definitions:
                 type: string
     WatchRequest:
         type: object
+        description: Give devices, or scope.
         required:
-        - devices
         - what
         - then
         properties:
@@ -60,6 +60,9 @@ definitions:
             origin:
                 type: string
                 description: Who made the rule, e.g. "assistant" or "api". Shown on the rule's badge.
+            scope:
+                type: string
+                description: 'Instead of devices: "all", "group:<name>" or "location:<name>" make ONE rule that follows the group - it is matched to devices when their events fire, so a device added later is covered, and the tasks run for whichever device raised the event. "system" is a rule of the server itself: it runs on a system event (armed, disarmed, profileapplied, uiconnected, uidisconnected, uinosessions) or at when.at, needs no device, cannot have a gate, and its tasks must name any device they act on. Such rules are stored as actions with objecttypeid 0 and objectid 0 and timed by the server schedule.'
             devices:
                 type: array
                 description: 'Devices to watch. Each entry is {"ot":2,"oid":1}, an "ot:oid" string ("2:1") or a device name.'
