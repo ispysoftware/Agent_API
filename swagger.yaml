@@ -149,10 +149,10 @@ definitions:
                                     type: string
                             start:
                                 type: string
-                                description: HH:mm
+                                description: 'HH:mm, or sunrise / sunset with an optional offset in minutes: "sunset", "sunset+30", "sunrise-15". Worked out again every day from the location''s coordinates (06:00 / 18:00 when it has none).'
                             end:
                                 type: string
-                                description: HH:mm
+                                description: HH:mm, or sunrise / sunset as for start
                     at:
                         type: object
                         description: 'A rule that runs at a set time instead of on an event: leave what.event out. With a gate it looks at the camera then and acts on the answer ("if the bins are not out on Sunday at 8pm, message Max" = at {days:[sun], time:"20:00"} + gate {prompt:"Are the wheelie bins out at the kerb?", on:"no"}); without a gate it just runs the tasks. Needs the device''s schedule on. Cannot be combined with window.'
@@ -164,7 +164,7 @@ definitions:
                                     type: string
                             time:
                                 type: string
-                                description: HH:mm, local
+                                description: HH:mm local, or sunrise / sunset with an optional offset in minutes (sunset-30)
                     date:
                         type: string
                         description: One local day, yyyy-MM-dd. The rule expires at the end of that day (or of the window on that day).
