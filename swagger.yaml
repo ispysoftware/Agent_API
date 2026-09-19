@@ -90,6 +90,12 @@ definitions:
                             prompt:
                                 type: string
                                 description: 'A question about the image, e.g. "Is there a red car in this image?"'
+                            on:
+                                type: string
+                                enum:
+                                - "yes"
+                                - "no"
+                                description: 'YES/NO question only: which answer runs the tasks. "no" = "if the bins are NOT out...". Default yes. Anything but a clear YES or NO runs nothing.'
                             keywords:
                                 type: array
                                 description: Usually omitted. For questions with several answers.
@@ -144,6 +150,18 @@ definitions:
                             end:
                                 type: string
                                 description: HH:mm
+                    at:
+                        type: object
+                        description: 'A rule that runs at a set time instead of on an event: leave what.event out. With a gate it looks at the camera then and acts on the answer ("if the bins are not out on Sunday at 8pm, message Max" = at {days:[sun], time:"20:00"} + gate {prompt:"Are the wheelie bins out at the kerb?", on:"no"}); without a gate it just runs the tasks. Needs the device''s schedule on. Cannot be combined with window.'
+                        properties:
+                            days:
+                                type: array
+                                description: 'mon..sun. Empty = every day'
+                                items:
+                                    type: string
+                            time:
+                                type: string
+                                description: HH:mm, local
                     date:
                         type: string
                         description: One local day, yyyy-MM-dd. The rule expires at the end of that day (or of the window on that day).
