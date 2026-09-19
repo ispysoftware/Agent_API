@@ -5,7 +5,7 @@ info:
     \ AgentDVR at [https://www.ispyconnect.com](https://www.ispyconnect.com)\
     \ This interface uses the default API endpoint of http://localhost:8090. You will need Agent DVR installed and running to use it. Many of the commands below take an Object ID and an Object Type ID. The Object ID is displayed in Agent's UI when you edit the device at the top left. For example if it says 1: Home Cam then your Object ID is 1. The Object Type ID is 1 for Microphones and 2 for cameras. You can also provide a group parameter instead of object id and type id - this will then apply the command to all devices that are in that group (on the General tab when you edit the device). Some commands can be called with neither id or group and will then apply to every device on the system."
   title: 'Agent DVR'
-  version: "8.0.5.0"
+  version: "8.0.7.0"
   termsOfService: "https://www.ispyconnect.com/terms.aspx"
   license:
     name: "Apache 2.0"
@@ -47,6 +47,175 @@ definitions:
                 type: string
             Type:
                 type: string
+    WatchRequest:
+        type: object
+        required:
+        - devices
+        - what
+        - then
+        properties:
+            instruction:
+                type: string
+                description: The request in plain words, e.g. "tell me if a red car turns up in the next 6 hours". Shown on the rule in the device's Actions list.
+            origin:
+                type: string
+                description: Who made the rule, e.g. "assistant" or "api". Shown on the rule's badge.
+            devices:
+                type: array
+                description: 'Devices to watch. Each entry is {"ot":2,"oid":1}, an "ot:oid" string ("2:1") or a device name.'
+                items:
+                    type: object
+            what:
+                type: object
+                required:
+                - event
+                properties:
+                    event:
+                        type: string
+                        description: 'The action condition that triggers the rule, e.g. objectfound, facerecognized, licenseplaterecognized, soundrecognized, detected, alert, loiterdetected, disconnect, reconnect, recordingstarted. The detector behind it must be enabled on the device or the rule is refused.'
+                    tags:
+                        type: array
+                        description: What the event must contain (object labels, face names, plates, sound labels), lower case. Object and sound labels must be in the device's Find list. Empty matches anything.
+                        items:
+                            type: string
+                    tagrule:
+                        type: string
+                        enum:
+                        - or
+                        - and
+                    gate:
+                        type: object
+                        description: Optional. Asks the configured AI provider (Server Settings - AI Settings) a question about the current frame each time the event fires; the tasks only run when the reply contains one of the keywords (whole word match). One AI call per trigger, limited by guards.airate.
+                        properties:
+                            prompt:
+                                type: string
+                            keywords:
+                                type: array
+                                items:
+                                    type: string
+            then:
+                type: array
+                description: 'Tasks to run, in the same form as action tasks: {"type":"PM","param1":"Red car at {NAME}"} for a push notification (empty param1 = the device''s push template), {"type":"E","param1":"you@example.com","param2":"1"} for email, and so on. Execute File (EXE) tasks are not allowed.'
+                items:
+                    type: object
+                    properties:
+                        type:
+                            type: string
+                        param1:
+                            type: string
+                        param2:
+                            type: string
+                        param3:
+                            type: string
+                        param4:
+                            type: string
+                        param5:
+                            type: string
+                        param6:
+                            type: string
+            when:
+                type: object
+                description: Optional time limits; they combine. With none the rule runs until it is deleted. A rule with an expiry deletes itself once it has passed.
+                properties:
+                    hours:
+                        type: number
+                        description: Expire this many hours from now
+                    until:
+                        type: string
+                        description: Expire at this local date and time, ISO 8601 (2026-09-20T18:00)
+                    expires_ms:
+                        type: integer
+                        format: int64
+                        description: Expire at this time, UTC epoch milliseconds
+                    window:
+                        type: object
+                        description: Weekly window in local time. The device's schedule must be enabled. An end before the start runs overnight.
+                        properties:
+                            days:
+                                type: array
+                                description: 'mon, tue, wed, thu, fri, sat, sun. Empty = every day'
+                                items:
+                                    type: string
+                            start:
+                                type: string
+                                description: HH:mm
+                            end:
+                                type: string
+                                description: HH:mm
+                    date:
+                        type: string
+                        description: One local day, yyyy-MM-dd. The rule expires at the end of that day (or of the window on that day).
+            guards:
+                type: object
+                properties:
+                    maxruns:
+                        type: integer
+                        description: Pause the rule after it has run its tasks this many times. 0 = no limit.
+                    airate:
+                        type: integer
+                        description: Most AI calls per hour for a gated rule. Default 30, maximum 600.
+    Watch:
+        type: object
+        properties:
+            ident:
+                type: string
+            origin:
+                type: string
+            instruction:
+                type: string
+            summary:
+                type: string
+                description: One line describing what was set up
+            devices:
+                type: array
+                items:
+                    type: object
+                    properties:
+                        ot:
+                            type: integer
+                        oid:
+                            type: integer
+                        name:
+                            type: string
+            what:
+                type: object
+                description: event, tags, tagrule and gate {prompt, keywords} (null when the rule has no AI gate)
+            then:
+                type: array
+                description: The tasks the rule runs (type, name, param1-3)
+                items:
+                    type: object
+            when:
+                type: object
+                description: expires (local ISO 8601), expires_ms (UTC epoch ms) and window {days, start, end, date}; null where not set
+            guards:
+                type: object
+                description: maxruns and airate
+            active:
+                type: boolean
+                description: False while paused, outside its window, or after reaching maxruns
+            spent:
+                type: boolean
+                description: True once the rule has run maxruns times. resumewatch re-arms it.
+            runcount:
+                type: integer
+            actions:
+                type: array
+                description: Idents of the actions the rule compiled to (two when it has an AI gate)
+                items:
+                    type: string
+            schedule_rows:
+                type: integer
+    WatchResponse:
+        properties:
+            watch:
+                $ref: '#/definitions/Watch'
+    WatchesResponse:
+        properties:
+            watches:
+                type: array
+                items:
+                    $ref: '#/definitions/Watch'
 paths:
     /alerts.json:
         get:
@@ -1081,6 +1250,40 @@ paths:
                     description: Turn lpr off for the device.
             tags: 
             - Commands
+    /command/setaifind:
+        get:
+            summary: Set or add to the objects a camera's object detection looks for
+            operationId: /command/setaifind
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            - description: Comma separated labels to add to the existing Find list, e.g. dog,cat. v8.0.7.0+
+              in: query
+              name: add
+              required: false
+              type: string
+            - description: Comma separated labels that replace the whole Find list. Not validated.
+              in: query
+              name: objects
+              required: false
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'With add, labels the camera''s AI model does not know are rejected and the call returns {"status":"ok"|"partial","find":[...],"rejected":[...]}. With objects, returns {"status":"ok"}.'
+            tags:
+            - Commands
     /command/objectdetecton:
         get:
             summary: Turn object recognition on
@@ -1991,6 +2194,114 @@ paths:
                     description: Remove the task with the specified name from the device
             tags:
             - Commands
+    /q/createwatch:
+        post:
+            summary: Create a watch rule - a plain-language rule such as "tell me if a red car turns up in the next 6 hours"
+            operationId: /q/createwatch
+            consumes:
+                - application/json
+            parameters:
+            - in: body
+              name: body
+              required: true
+              schema:
+                  $ref: '#/definitions/WatchRequest'
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Compiles the rule into ordinary actions (and schedule entries for a weekly window) on each device; they appear in the device''s Actions list marked as a rule and can be deleted there. Returns {"watch":{...}}, or {"error":"..."} when the rule is invalid or could never fire (detector off, label not in the Find list, schedule off for a window, no AI provider for a gate) - the message says what to change. This is the endpoint behind the MCP create_watch tool. v8.0.7.0+'
+                    schema:
+                        $ref: '#/definitions/WatchResponse'
+            tags:
+            - Watch rules
+    /q/listwatches:
+        get:
+            summary: Returns the watch rules on this server
+            operationId: /q/listwatches
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Returns every watch rule with its instruction, summary, devices, what/when/then, whether it is active and how often it has run. Actions made by hand in the UI are not listed. v8.0.7.0+
+                    schema:
+                        $ref: '#/definitions/WatchesResponse'
+            tags:
+            - Watch rules
+    /q/getwatch:
+        get:
+            summary: Returns one watch rule
+            operationId: /q/getwatch
+            parameters:
+            - description: Watch ident, from createwatch or listwatches
+              in: query
+              name: ident
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Returns {"watch":{...}} or {"error":"Watch not found"}. v8.0.7.0+
+                    schema:
+                        $ref: '#/definitions/WatchResponse'
+            tags:
+            - Watch rules
+    /q/deletewatch:
+        get:
+            summary: Delete a watch rule
+            operationId: /q/deletewatch
+            parameters:
+            - description: Watch ident, from createwatch or listwatches
+              in: query
+              name: ident
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Deletes the rule and everything it created (its actions and schedule entries). Returns {"actionResult":"ok","success":true} or {"error":"Watch not found"}. v8.0.7.0+
+            tags:
+            - Watch rules
+    /q/pausewatch:
+        get:
+            summary: Pause a watch rule
+            operationId: /q/pausewatch
+            parameters:
+            - description: Watch ident, from createwatch or listwatches
+              in: query
+              name: ident
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Disables the rule's actions; it stays listed but never fires. Returns the rule. v8.0.7.0+
+                    schema:
+                        $ref: '#/definitions/WatchResponse'
+            tags:
+            - Watch rules
+    /q/resumewatch:
+        get:
+            summary: Resume a paused watch rule
+            operationId: /q/resumewatch
+            parameters:
+            - description: Watch ident, from createwatch or listwatches
+              in: query
+              name: ident
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Re-enables the rule and resets its run count, so a rule that stopped at maxruns fires again. Returns the rule. v8.0.7.0+
+                    schema:
+                        $ref: '#/definitions/WatchResponse'
+            tags:
+            - Watch rules
     /command/triggerRecord:
         get:
             summary: Trigger recording for the device. Recording continues until Trigger Timeout is reached (on the recording tab of the device). Timeout is reset with each call.
