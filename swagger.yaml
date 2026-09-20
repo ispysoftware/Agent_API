@@ -2318,7 +2318,7 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: 'Live description for building rules: server {local_time, day, timezone, armed, account_connected, profiles, sounds, faces}; devices [{id, name, kind, events, alerts_on, motion_detector_on, schedule_on, email_on, object_detection {on, finds, can_find}, face_recognition_on, plate_recognition_on, ai_questions_available, talk, ptz, record_mode, sound_recognition}]; tasks [{type, does, needs, params [{name, kind, required, note}]}]; unsupported [{request, instead}]. This is the endpoint behind the MCP describe_rule_options tool. v8.0.7.0+'
+                    description: 'Live description for building rules: server {local_time, day, timezone, armed (the setting, as getStatus reports it), arming_in_seconds (exit delay left after arming; alerts are held back until it is 0), account_connected, profiles, sounds, faces}; devices [{id, name, kind, events, alerts_on, motion_detector_on, schedule_on, email_on, object_detection {on, finds, can_find}, face_recognition_on, plate_recognition_on, ai_questions_available, talk, ptz, record_mode, sound_recognition}]; tasks [{type, does, needs, params [{name, kind, required, note}]}]; unsupported [{request, instead}]. This is the endpoint behind the MCP describe_rule_options tool. v8.0.7.0+'
             tags:
             - Watch rules
     /q/listwatches:
