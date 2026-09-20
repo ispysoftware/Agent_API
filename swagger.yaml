@@ -1333,6 +1333,46 @@ paths:
                     description: 'With add, labels the camera''s AI model does not know are rejected and the call returns {"status":"ok"|"partial","find":[...],"rejected":[...]}. With objects, returns {"status":"ok"}.'
             tags:
             - Commands
+    /command/setgroups:
+        get:
+            summary: Add a device to groups, remove it from groups, or replace its groups
+            operationId: /command/setgroups
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            - description: Comma separated group names to add the device to. A group exists as soon as one device is in it.
+              in: query
+              name: add
+              required: false
+              type: string
+            - description: Comma separated group names to take the device out of.
+              in: query
+              name: remove
+              required: false
+              type: string
+            - description: Comma separated group names that replace the device's whole list. Empty clears it. Applied before add and remove.
+              in: query
+              name: groups
+              required: false
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"status":"ok","groups":[...]} with the device''s resulting groups. A camera''s paired microphone is given the same groups. Groups also control which devices a restricted user account can see. v8.0.7.0+'
+            tags:
+            - Commands
     /command/objectdetecton:
         get:
             summary: Turn object recognition on
