@@ -2285,7 +2285,7 @@ paths:
             - Commands
     /q/createwatch:
         post:
-            summary: Create a watch rule - a plain-language rule such as "tell me if a red car turns up in the next 6 hours"
+            summary: Create an assistant rule - a plain-language rule such as "tell me if a red car turns up in the next 6 hours"
             operationId: /q/createwatch
             consumes:
                 - application/json
@@ -2303,10 +2303,10 @@ paths:
                     schema:
                         $ref: '#/definitions/WatchResponse'
             tags:
-            - Watch rules
+            - Assistant rules
     /q/getruleoptions:
         get:
-            summary: What a watch rule can be made of on this server
+            summary: What an assistant rule can be made of on this server
             operationId: /q/getruleoptions
             parameters:
             - description: Comma separated device names or ot:oid ids. Empty = every enabled device
@@ -2320,23 +2320,23 @@ paths:
                 "200":
                     description: 'Live description for building rules: server {local_time, day, timezone, armed (the setting, as getStatus reports it), arming_in_seconds (exit delay left after arming; alerts are held back until it is 0), account_connected, profiles, sounds, faces}; devices [{id, name, kind, events, alerts_on, motion_detector_on, schedule_on, email_on, object_detection {on, finds, can_find}, face_recognition_on, plate_recognition_on, ai_questions_available, talk, ptz, record_mode, sound_recognition}]; tasks [{type, does, needs, params [{name, kind, required, note}]}]; unsupported [{request, instead}]. This is the endpoint behind the MCP describe_rule_options tool. v8.0.7.0+'
             tags:
-            - Watch rules
+            - Assistant rules
     /q/listwatches:
         get:
-            summary: Returns the watch rules on this server
+            summary: Returns the assistant rules on this server
             operationId: /q/listwatches
             produces:
                 - application/json
             responses:
                 "200":
-                    description: Returns every watch rule with its instruction, summary, devices, what/when/then, whether it is active and how often it has run. Actions made by hand in the UI are not listed. v8.0.7.0+
+                    description: Returns every assistant rule with its instruction, summary, devices, what/when/then, whether it is active and how often it has run. Actions made by hand in the UI are not listed. v8.0.7.0+
                     schema:
                         $ref: '#/definitions/WatchesResponse'
             tags:
-            - Watch rules
+            - Assistant rules
     /q/getwatch:
         get:
-            summary: Returns one watch rule
+            summary: Returns one assistant rule
             operationId: /q/getwatch
             parameters:
             - description: Watch ident, from createwatch or listwatches
@@ -2352,10 +2352,10 @@ paths:
                     schema:
                         $ref: '#/definitions/WatchResponse'
             tags:
-            - Watch rules
+            - Assistant rules
     /q/deletewatch:
         get:
-            summary: Delete a watch rule
+            summary: Delete an assistant rule
             operationId: /q/deletewatch
             parameters:
             - description: Watch ident, from createwatch or listwatches
@@ -2369,10 +2369,10 @@ paths:
                 "200":
                     description: Deletes the rule and everything it created (its actions and schedule entries). Returns {"actionResult":"ok","success":true} or {"error":"Watch not found"}. v8.0.7.0+
             tags:
-            - Watch rules
+            - Assistant rules
     /q/pausewatch:
         get:
-            summary: Pause a watch rule
+            summary: Pause an assistant rule
             operationId: /q/pausewatch
             parameters:
             - description: Watch ident, from createwatch or listwatches
@@ -2388,10 +2388,10 @@ paths:
                     schema:
                         $ref: '#/definitions/WatchResponse'
             tags:
-            - Watch rules
+            - Assistant rules
     /q/resumewatch:
         get:
-            summary: Resume a paused watch rule
+            summary: Resume a paused assistant rule
             operationId: /q/resumewatch
             parameters:
             - description: Watch ident, from createwatch or listwatches
@@ -2407,7 +2407,7 @@ paths:
                     schema:
                         $ref: '#/definitions/WatchResponse'
             tags:
-            - Watch rules
+            - Assistant rules
     /command/triggerRecord:
         get:
             summary: Trigger recording for the device. Recording continues until Trigger Timeout is reached (on the recording tab of the device). Timeout is reset with each call.
