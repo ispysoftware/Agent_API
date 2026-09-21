@@ -47,7 +47,7 @@ definitions:
                 type: string
             Type:
                 type: string
-    WatchRequest:
+    RuleRequest:
         type: object
         description: Give devices, or scope.
         required:
@@ -189,7 +189,7 @@ definitions:
             preview:
                 type: boolean
                 description: true = validate and describe the rule without saving it
-    Watch:
+    Rule:
         type: object
         properties:
             ident:
@@ -237,7 +237,7 @@ definitions:
                 description: 'Why, in words: "active", "waiting: outside its time window, it switches on by itself on Mon at 09:00", "paused", or "spent: it reached its run limit..."'
             spent:
                 type: boolean
-                description: True once the rule has run maxruns times. resumewatch re-arms it.
+                description: True once the rule has run maxruns times. resumerule re-arms it.
             runcount:
                 type: integer
             actions:
@@ -247,10 +247,10 @@ definitions:
                     type: string
             schedule_rows:
                 type: integer
-    WatchResponse:
+    RuleResponse:
         properties:
-            watch:
-                $ref: '#/definitions/Watch'
+            rule:
+                $ref: '#/definitions/Rule'
             warnings:
                 type: array
                 description: Things the user should know that do not stop the rule (no end time, run limit applies per window, face names that could not be checked)
@@ -259,12 +259,12 @@ definitions:
             preview:
                 type: boolean
                 description: true when the request had preview=true - nothing was saved
-    WatchesResponse:
+    RulesResponse:
         properties:
-            watches:
+            rules:
                 type: array
                 items:
-                    $ref: '#/definitions/Watch'
+                    $ref: '#/definitions/Rule'
 paths:
     /alerts.json:
         get:
@@ -2283,10 +2283,10 @@ paths:
                     description: Remove the task with the specified name from the device
             tags:
             - Commands
-    /q/createwatch:
+    /q/createrule:
         post:
             summary: Create an assistant rule - a plain-language rule such as "tell me if a red car turns up in the next 6 hours"
-            operationId: /q/createwatch
+            operationId: /q/createrule
             consumes:
                 - application/json
             parameters:
@@ -2294,14 +2294,14 @@ paths:
               name: body
               required: true
               schema:
-                  $ref: '#/definitions/WatchRequest'
+                  $ref: '#/definitions/RuleRequest'
             produces:
                 - application/json
             responses:
                 "200":
-                    description: 'Compiles the rule into ordinary actions (and schedule entries for a weekly window) on each device; they appear in the device''s Actions list marked as a rule and can be deleted there. Returns {"watch":{...},"warnings":[...]}, or {"error":"...","problems":[...]} when the rule could never work - every problem at once, each with its fix (detector off, label not in the Find list, schedule off for a window, no AI provider, no enrolled face of that name, camera has no talk channel, no such PTZ preset or sound file, no connected account for speech). This is the endpoint behind the MCP create_watch tool. v8.0.7.0+'
+                    description: 'Compiles the rule into ordinary actions (and schedule entries for a weekly window) on each device; they appear in the device''s Actions list marked as a rule and can be deleted there. Returns {"rule":{...},"warnings":[...]}, or {"error":"...","problems":[...]} when the rule could never work - every problem at once, each with its fix (detector off, label not in the Find list, schedule off for a window, no AI provider, no enrolled face of that name, camera has no talk channel, no such PTZ preset or sound file, no connected account for speech). This is the endpoint behind the MCP create_rule tool. v8.0.7.0+'
                     schema:
-                        $ref: '#/definitions/WatchResponse'
+                        $ref: '#/definitions/RuleResponse'
             tags:
             - Assistant rules
     /q/getruleoptions:
@@ -2321,25 +2321,25 @@ paths:
                     description: 'Live description for building rules: server {local_time, day, timezone, armed (the setting, as getStatus reports it), arming_in_seconds (exit delay left after arming; alerts are held back until it is 0), account_connected, profiles, sounds, faces}; devices [{id, name, kind, events, alerts_on, motion_detector_on, schedule_on, email_on, object_detection {on, finds, can_find}, face_recognition_on, plate_recognition_on, ai_questions_available, talk, ptz, record_mode, sound_recognition}]; tasks [{type, does, needs, params [{name, kind, required, note}]}]; unsupported [{request, instead}]. This is the endpoint behind the MCP describe_rule_options tool. v8.0.7.0+'
             tags:
             - Assistant rules
-    /q/listwatches:
+    /q/listrules:
         get:
             summary: Returns the assistant rules on this server
-            operationId: /q/listwatches
+            operationId: /q/listrules
             produces:
                 - application/json
             responses:
                 "200":
                     description: Returns every assistant rule with its instruction, summary, devices, what/when/then, whether it is active and how often it has run. Actions made by hand in the UI are not listed. v8.0.7.0+
                     schema:
-                        $ref: '#/definitions/WatchesResponse'
+                        $ref: '#/definitions/RulesResponse'
             tags:
             - Assistant rules
-    /q/getwatch:
+    /q/getrule:
         get:
             summary: Returns one assistant rule
-            operationId: /q/getwatch
+            operationId: /q/getrule
             parameters:
-            - description: Watch ident, from createwatch or listwatches
+            - description: Rule ident, from createrule or listrules
               in: query
               name: ident
               required: true
@@ -2348,17 +2348,17 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: Returns {"watch":{...}} or {"error":"Watch not found"}. v8.0.7.0+
+                    description: Returns {"rule":{...}} or {"error":"Rule not found"}. v8.0.7.0+
                     schema:
-                        $ref: '#/definitions/WatchResponse'
+                        $ref: '#/definitions/RuleResponse'
             tags:
             - Assistant rules
-    /q/deletewatch:
+    /q/deleterule:
         get:
             summary: Delete an assistant rule
-            operationId: /q/deletewatch
+            operationId: /q/deleterule
             parameters:
-            - description: Watch ident, from createwatch or listwatches
+            - description: Rule ident, from createrule or listrules
               in: query
               name: ident
               required: true
@@ -2367,15 +2367,15 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: Deletes the rule and everything it created (its actions and schedule entries). Returns {"actionResult":"ok","success":true} or {"error":"Watch not found"}. v8.0.7.0+
+                    description: Deletes the rule and everything it created (its actions and schedule entries). Returns {"actionResult":"ok","success":true} or {"error":"Rule not found"}. v8.0.7.0+
             tags:
             - Assistant rules
-    /q/pausewatch:
+    /q/pauserule:
         get:
             summary: Pause an assistant rule
-            operationId: /q/pausewatch
+            operationId: /q/pauserule
             parameters:
-            - description: Watch ident, from createwatch or listwatches
+            - description: Rule ident, from createrule or listrules
               in: query
               name: ident
               required: true
@@ -2386,15 +2386,15 @@ paths:
                 "200":
                     description: Disables the rule's actions; it stays listed but never fires. Returns the rule. v8.0.7.0+
                     schema:
-                        $ref: '#/definitions/WatchResponse'
+                        $ref: '#/definitions/RuleResponse'
             tags:
             - Assistant rules
-    /q/resumewatch:
+    /q/resumerule:
         get:
             summary: Resume a paused assistant rule
-            operationId: /q/resumewatch
+            operationId: /q/resumerule
             parameters:
-            - description: Watch ident, from createwatch or listwatches
+            - description: Rule ident, from createrule or listrules
               in: query
               name: ident
               required: true
@@ -2405,7 +2405,7 @@ paths:
                 "200":
                     description: Re-enables the rule and resets its run count, so a rule that stopped at maxruns fires again. Returns the rule. v8.0.7.0+
                     schema:
-                        $ref: '#/definitions/WatchResponse'
+                        $ref: '#/definitions/RuleResponse'
             tags:
             - Assistant rules
     /command/triggerRecord:
