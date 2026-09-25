@@ -165,6 +165,9 @@ definitions:
                             time:
                                 type: string
                                 description: HH:mm local, or sunrise / sunset with an optional offset in minutes (sunset-30)
+                    every_minutes:
+                        type: integer
+                        description: 'A rule that runs every this many minutes (1-1440; at least 5 with a gate) instead of on an event: leave what.event out. Combine with window to limit it to certain hours. The clock starts when the rule is created (or the server starts). Cannot be combined with at. v8.0.9.0+'
                     date:
                         type: string
                         description: One local day, yyyy-MM-dd. The rule expires at the end of that day (or of the window on that day).
@@ -1299,40 +1302,6 @@ paths:
                     description: Turn lpr off for the device.
             tags: 
             - Commands
-    /command/setaifind:
-        get:
-            summary: Set or add to the objects a camera's object detection looks for
-            operationId: /command/setaifind
-            parameters:
-            - description: Object ID
-              in: query
-              name: oid
-              required: true
-              type: integer
-            - description: Object TypeID
-              enum:
-              - 2
-              in: query
-              name: ot
-              required: true
-              type: integer
-            - description: Comma separated labels to add to the existing Find list, e.g. dog,cat. v8.0.7.0+
-              in: query
-              name: add
-              required: false
-              type: string
-            - description: Comma separated labels that replace the whole Find list. Not validated.
-              in: query
-              name: objects
-              required: false
-              type: string
-            produces:
-                - application/json
-            responses:
-                "200":
-                    description: 'With add, labels the camera''s AI model does not know are rejected and the call returns {"status":"ok"|"partial","find":[...],"rejected":[...]}. With objects, returns {"status":"ok"}.'
-            tags:
-            - Commands
     /command/setalertmode:
         get:
             summary: Set what raises an alert on a device (the Alert Mode on the Alerts tab)
@@ -1450,6 +1419,129 @@ paths:
             responses:
                 "200":
                     description: 'Returns {"status":"ok","ai":"object","mode":"detected"}. v8.0.9.0+'
+            tags:
+            - Commands
+    /command/say:
+        get:
+            summary: Speak text through a camera's speaker now
+            operationId: /command/say
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            - description: What to say (up to 500 characters)
+              in: query
+              name: text
+              required: true
+              type: string
+            - description: Voice name; empty = the server's default voice
+              in: query
+              name: voice
+              required: false
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"status":"ok","said":"..."}. Needs a camera with talk set up and a connected ispyconnect.com account for speech. v8.0.9.0+'
+            tags:
+            - Commands
+    /command/playsound:
+        get:
+            summary: Play one of the server's sound files through a camera's speaker now
+            operationId: /command/playsound
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            - description: File name from the server's sounds folder
+              in: query
+              name: file
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"status":"ok","played":"..."} or an error listing the available files. Needs a camera with talk set up. v8.0.9.0+'
+            tags:
+            - Commands
+    /command/setname:
+        get:
+            summary: Rename a device
+            operationId: /command/setname
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            - description: New name (up to 100 characters)
+              in: query
+              name: name
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"status":"ok","name":"...","was":"..."}. v8.0.9.0+'
+            tags:
+            - Commands
+    /command/setlocation:
+        get:
+            summary: Put a device in a location
+            operationId: /command/setlocation
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            - description: Location name or index. Locations are created in Server Settings.
+              in: query
+              name: location
+              required: true
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"status":"ok","location":{"index","name"}} or an error listing the locations. v8.0.9.0+'
             tags:
             - Commands
     /command/setgroups:
@@ -1763,16 +1855,21 @@ paths:
               name: ot
               required: true
               type: integer
-            - description: Object List
+            - description: Comma separated labels that replace the whole Find list. Not validated. Either this or add.
               in: query
               name: objects
-              required: true
+              required: false
+              type: string
+            - description: Comma separated labels to add to the existing Find list, e.g. dog,cat. Labels the camera's AI model does not know are rejected. v8.0.7.0+
+              in: query
+              name: add
+              required: false
               type: string
             produces:
                 - application/json
             responses:
                 "200":
-                    description: Set the find list
+                    description: 'With objects: {"status":"ok"}. With add: {"status":"ok"|"partial","find":[...],"rejected":[...]}.'
             tags: 
             - Commands
     /command/setAIModel:
@@ -1868,16 +1965,30 @@ paths:
               name: max
               required: false
               type: integer
-            - description: Gain Multiplier (0-100) 
+            - description: Gain Multiplier (0-100)
               in: query
               name: gain
               required: false
               type: integer
+            - description: 'Simpler form, v8.0.9.0+: with level, what says which detector - motion or objects for a camera, sound for a microphone (min/max/gain are then ignored)'
+              enum:
+              - motion
+              - objects
+              - sound
+              in: query
+              name: what
+              required: false
+              type: string
+            - description: 'v8.0.9.0+: a level 1-100 (higher = more alerts), or low/medium/high (25/50/75), or lower/higher (15 below or above the current level). motion maps to the detector''s own threshold (minsensitivity for Simple/TripWires/Speed/Tracking, person confidence for people, hikvisionSensitivity for hikvision - a new camera is at 80); objects = object detection minimum confidence (level = 100 - confidence). Cameras with an onvif, reolink or mqtt detector return an error because the sensitivity is set on the camera.'
+              in: query
+              name: level
+              required: false
+              type: string
             produces:
                 - application/json
             responses:
                 "200":
-                    description: Set the sensitivity for the device
+                    description: 'Set the sensitivity for the device. With level: {"status":"ok","what","level","changed":"<field>","from","to"}'
             tags:
             - Commands
     /command/setObjectState:
