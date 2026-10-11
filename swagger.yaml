@@ -5,7 +5,7 @@ info:
     \ AgentDVR at [https://www.ispyconnect.com](https://www.ispyconnect.com)\
     \ This interface uses the default API endpoint of http://localhost:8090. You will need Agent DVR installed and running to use it. Many of the commands below take an Object ID and an Object Type ID. The Object ID is displayed in Agent's UI when you edit the device at the top left. For example if it says 1: Home Cam then your Object ID is 1. The Object Type ID is 1 for Microphones and 2 for cameras. You can also provide a group parameter instead of object id and type id - this will then apply the command to all devices that are in that group (on the General tab when you edit the device). Some commands can be called with neither id or group and will then apply to every device on the system."
   title: 'Agent DVR'
-  version: "8.0.9.0"
+  version: "8.1.1.0"
   termsOfService: "https://www.ispyconnect.com/terms.aspx"
   license:
     name: "Apache 2.0"
@@ -2638,6 +2638,100 @@ paths:
                         $ref: '#/definitions/RuleResponse'
             tags:
             - Assistant rules
+    /q/analyticssources:
+        get:
+            summary: Lists everything that has analytics data - cameras, zones and trip wires
+            operationId: /q/analyticssources
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"sources":[{id, kind (camera, zone or line), number (zone or trip wire number), name (the name given to the zone or trip wire, if any), camera (camera name), cameraIdent (the camera''s permanent analytics id), location, groups (comma separated), current, oid, first, last}]}. Use the id values as sources for analyticstotals and analyticsvisits. current is false for history from a camera, zone or trip wire that is no longer in the configuration; oid is the camera''s object id when it still exists. first and last are Unix milliseconds, UTC. Analytics counts people and vehicles with the built-in AI and needs a subscription. v8.1.1.0+'
+            tags:
+            - Analytics
+    /q/analyticstotals:
+        get:
+            summary: Analytics totals over time for one or more sources
+            operationId: /q/analyticstotals
+            parameters:
+            - description: Comma separated source ids from analyticssources (up to 2000)
+              in: query
+              name: sources
+              required: true
+              type: string
+            - description: Start of the range, Unix milliseconds UTC. Default 24 hours before to
+              in: query
+              name: from
+              required: false
+              type: integer
+            - description: End of the range, Unix milliseconds UTC. Default now
+              in: query
+              name: to
+              required: false
+              type: integer
+            - description: 'Size of each total. hour (default; up to two months per request), day (up to three years) or 15m (worked out from the individual records, so only within the retention period and up to two days per request)'
+              enum:
+              - hour
+              - day
+              - 15m
+              in: query
+              name: step
+              required: false
+              type: string
+            - description: Minutes east of UTC, deciding where a day starts when step is day. Default the server's time zone
+              in: query
+              name: tz
+              required: false
+              type: integer
+            - description: 'Only this metric. Camera: objects (objects seen, by when they appeared), objectseconds (seconds in view). Zone: zoneentries, zoneseconds, zonemaxcount (highest count at once). Trip wire: lineright (crossings in the direction of the arrow drawn on the wire, shown as Inward), lineleft (the other way, shown as Outward), linetailgating (crossings that followed another object across, the same way, within a second; also counted in their direction). Default every metric'
+              in: query
+              name: metric
+              required: false
+              type: string
+            - description: Only this object class, e.g. person or car. Default every class
+              in: query
+              name: label
+              required: false
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"step", "from", "to", "tz", "series":[{"source": id, "label": class, "metric": name, "points":[[time, value],...]}]}. Each point is the start of a step (Unix milliseconds, UTC) and its total; steps with nothing in them are left out. Counts and seconds add up across a day; zonemaxcount takes the day''s highest. Average dwell in a zone = zoneseconds / zoneentries. from is moved later if the range is longer than the step allows. v8.1.1.0+'
+            tags:
+            - Analytics
+    /q/analyticsvisits:
+        get:
+            summary: The individual analytics records behind the totals for one source
+            operationId: /q/analyticsvisits
+            parameters:
+            - description: Source id from analyticssources
+              in: query
+              name: source
+              required: true
+              type: integer
+            - description: Start of the range, Unix milliseconds UTC. Default 24 hours before to
+              in: query
+              name: from
+              required: false
+              type: integer
+            - description: End of the range, Unix milliseconds UTC. Default now
+              in: query
+              name: to
+              required: false
+              type: integer
+            - description: Maximum rows to return, 1 to 10000. Default 1000
+              in: query
+              name: limit
+              required: false
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Depends on the kind of source. Camera: {"kind":"objects","rows":[{object, label, start, end}]}. Zone: {"kind":"zonevisits","rows":[{object, label, enter, seconds, from (source id of the zone it came from, 0 = none)}]}. Trip wire: {"kind":"linecrossings","rows":[{object, label, time, direction (left or right; right is the direction of the arrow drawn on the wire), tailgating}]}. Times are Unix milliseconds, UTC. Individual records are kept for the retention period set in the analytics settings (90 days by default); totals are kept permanently. v8.1.1.0+'
+            tags:
+            - Analytics
     /command/triggerRecord:
         get:
             summary: Trigger recording for the device. Recording continues until Trigger Timeout is reached (on the recording tab of the device). Timeout is reset with each call.
