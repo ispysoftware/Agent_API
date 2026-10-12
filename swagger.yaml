@@ -2843,6 +2843,68 @@ paths:
                     description: 'Returns {"id", "bucket" (300000: the length of a piece in ms), "from", "to", "start" (the count going into the range), "points":[[time, peak, value],...]}. One point per five minutes in which the count changed: the highest it was changed to in them, and what it was at the end. Nothing is written while the count stays the same, so carry the last value forward over the gaps. Kept for the retention period. v8.1.1.0+'
             tags:
             - Analytics
+    /q/analyticspaths:
+        get:
+            summary: The paths objects took across a camera's picture
+            operationId: /q/analyticspaths
+            parameters:
+                - name: source
+                  in: query
+                  description: A camera's source id (from analyticssources)
+                  required: true
+                  type: integer
+                - name: from
+                  in: query
+                  description: Start of the range, Unix milliseconds UTC (default 24 hours before to)
+                  type: integer
+                - name: to
+                  in: query
+                  description: End of the range, Unix milliseconds UTC (default now)
+                  type: integer
+                - name: label
+                  in: query
+                  description: Only this class of object (default all)
+                  type: string
+                - name: limit
+                  in: query
+                  description: The most paths to return, newest first (default 300, at most 2000)
+                  type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"paths":[{"label", "start", "end", "points":[x, y, x, y, ...]}]}. Each path is where one object went while it was in view, thinned to a few dozen points; x and y are 0-255, as fractions of the picture''s width and height. Objects that hardly moved have none. Kept for the retention period. v8.1.1.0+'
+            tags:
+            - Analytics
+    /q/analyticsspeed:
+        get:
+            summary: The speeds timed by a speed measurement (two counting lines a known distance apart)
+            operationId: /q/analyticsspeed
+            parameters:
+                - name: id
+                  in: query
+                  description: The measurement's id (analyticscounters lists them under "traps")
+                  required: true
+                  type: string
+                - name: from
+                  in: query
+                  description: Start of the range, Unix milliseconds UTC (default 24 hours before to)
+                  type: integer
+                - name: to
+                  in: query
+                  description: End of the range, Unix milliseconds UTC (default now)
+                  type: integer
+                - name: label
+                  in: query
+                  description: Only this class of object (default all)
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"id", "rows":[[time, speed, direction],...]}: one row per object that crossed both of the measurement''s lines, in time order (at most 50000). speed is metres a second - the distance between the lines over the time between the crossings; direction is 1 for first line to second, 0 for the other way. A measurement is {"id", "name", "camera", "first", "second" (line keys), "distance" (metres)} in the "traps" list of analyticscounters, saved with the counters; "speedunit" there ("kmh" or "mph") is what the web interface shows speeds in. Kept for the retention period. v8.1.1.0+'
+            tags:
+            - Analytics
     /q/analyticsdwell:
         get:
             summary: How long objects stayed on camera, in bands
