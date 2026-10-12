@@ -2683,7 +2683,7 @@ paths:
               name: tz
               required: false
               type: integer
-            - description: 'Only this metric. Camera: objects (objects seen, by when they appeared), objectseconds (seconds in view), objectsmax (highest number on the camera at once - per class, and for all classes together in the series whose label is empty). Zone: zoneentries, zoneseconds, zonemaxcount (highest count at once). Trip wire: lineright (crossings in the direction of the arrow drawn on the wire, shown as Inward), lineleft (the other way, shown as Outward), linetailgating (crossings that followed another object across, the same way, within a second; also counted in their direction). Default every metric'
+            - description: 'Only this metric. Camera: objects (objects seen, by when they appeared), objectseconds (seconds in view), objectsmax (highest number on the camera at once - per class, and for all classes together in the series whose label is empty). Zone: zoneentries, zoneseconds, zonemaxcount (highest count at once), zonequeue (highest number waiting at once: as zonemaxcount, but counting only objects that had been in the zone for 5 seconds or more, so people walking through are left out - the length of a queue). Trip wire: lineright (crossings in the direction of the arrow drawn on the wire, shown as Inward), lineleft (the other way, shown as Outward), linetailgating (crossings that followed another object across, the same way, within a second; also counted in their direction). Default every metric'
               in: query
               name: metric
               required: false
@@ -2697,7 +2697,7 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: 'Returns {"step", "from", "to", "tz", "series":[{"source": id, "label": class, "metric": name, "points":[[time, value],...]}]}. Each point is the start of a step (Unix milliseconds, UTC) and its total; steps with nothing in them are left out. Counts and seconds add up across a day; zonemaxcount and objectsmax take the day''s highest. Average dwell in a zone = zoneseconds / zoneentries. from is moved later if the range is longer than the step allows. v8.1.1.0+'
+                    description: 'Returns {"step", "from", "to", "tz", "queue", "series":[{"source": id, "label": class, "metric": name, "points":[[time, value],...]}]}. Each point is the start of a step (Unix milliseconds, UTC) and its total; steps with nothing in them are left out. Counts and seconds add up across a day; zonemaxcount, zonequeue and objectsmax take the day''s highest. queue is the number of seconds an object has to have been in a zone to count towards zonequeue. Average dwell in a zone = zoneseconds / zoneentries. from is moved later if the range is longer than the step allows. v8.1.1.0+'
             tags:
             - Analytics
     /q/analyticsvisits:
@@ -2954,6 +2954,31 @@ paths:
             responses:
                 "200":
                     description: 'Returns {"id", "count"}, or {"error":"unknown counter"}. v8.1.1.0+'
+            tags:
+            - Analytics
+    /q/analyticsclear:
+        get:
+            summary: Clear a camera's heatmap or paths
+            operationId: /q/analyticsclear
+            parameters:
+                - name: source
+                  in: query
+                  description: The camera's source id (from analyticssources)
+                  required: true
+                  type: integer
+                - name: what
+                  in: query
+                  description: 'heat (the heatmap) or paths (the paths objects took across the picture). Everything gathered for the camera so far is thrown away, for every dashboard and user, and it cannot be undone. Counts and visits are not touched'
+                  required: true
+                  type: string
+                  enum:
+                  - heat
+                  - paths
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"cleared": rows removed}, or {"error":"unknown source"} / {"error":"unknown what"}. v8.1.1.0+'
             tags:
             - Analytics
     /q/analyticsdashboards:
