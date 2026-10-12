@@ -2646,7 +2646,7 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: 'Returns {"sources":[{id, kind (camera, zone or line), number (zone or trip wire number), name (the name given to the zone or trip wire, if any), camera (camera name), cameraIdent (the camera''s permanent analytics id), location, groups (comma separated), current, oid, first, last}]}. Use the id values as sources for analyticstotals and analyticsvisits. current is false for history from a camera, zone or trip wire that is no longer in the configuration; oid is the camera''s object id when it still exists. first and last are Unix milliseconds, UTC. Analytics counts people and vehicles with the built-in AI and needs a subscription. v8.1.1.0+'
+                    description: 'Returns {"sources":[{id, kind (camera, zone or line), key (its permanent key within the camera, e.g. w3 for a line - what an occupancy counter refers to a line by), number (zone or trip wire number), name (the name given to the zone or trip wire, if any), camera (camera name), cameraIdent (the camera''s permanent analytics id), location, groups (comma separated), current, oid, first, last}]}. Use the id values as sources for analyticstotals and analyticsvisits. current is false for history from a camera, zone or trip wire that is no longer in the configuration; oid is the camera''s object id when it still exists. first and last are Unix milliseconds, UTC. Analytics counts people and vehicles with the built-in AI and needs a subscription. v8.1.1.0+'
             tags:
             - Analytics
     /q/analyticstotals:
@@ -2683,7 +2683,7 @@ paths:
               name: tz
               required: false
               type: integer
-            - description: 'Only this metric. Camera: objects (objects seen, by when they appeared), objectseconds (seconds in view). Zone: zoneentries, zoneseconds, zonemaxcount (highest count at once). Trip wire: lineright (crossings in the direction of the arrow drawn on the wire, shown as Inward), lineleft (the other way, shown as Outward), linetailgating (crossings that followed another object across, the same way, within a second; also counted in their direction). Default every metric'
+            - description: 'Only this metric. Camera: objects (objects seen, by when they appeared), objectseconds (seconds in view), objectsmax (highest number on the camera at once - per class, and for all classes together in the series whose label is empty). Zone: zoneentries, zoneseconds, zonemaxcount (highest count at once). Trip wire: lineright (crossings in the direction of the arrow drawn on the wire, shown as Inward), lineleft (the other way, shown as Outward), linetailgating (crossings that followed another object across, the same way, within a second; also counted in their direction). Default every metric'
               in: query
               name: metric
               required: false
@@ -2697,7 +2697,7 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: 'Returns {"step", "from", "to", "tz", "series":[{"source": id, "label": class, "metric": name, "points":[[time, value],...]}]}. Each point is the start of a step (Unix milliseconds, UTC) and its total; steps with nothing in them are left out. Counts and seconds add up across a day; zonemaxcount takes the day''s highest. Average dwell in a zone = zoneseconds / zoneentries. from is moved later if the range is longer than the step allows. v8.1.1.0+'
+                    description: 'Returns {"step", "from", "to", "tz", "series":[{"source": id, "label": class, "metric": name, "points":[[time, value],...]}]}. Each point is the start of a step (Unix milliseconds, UTC) and its total; steps with nothing in them are left out. Counts and seconds add up across a day; zonemaxcount and objectsmax take the day''s highest. Average dwell in a zone = zoneseconds / zoneentries. from is moved later if the range is longer than the step allows. v8.1.1.0+'
             tags:
             - Analytics
     /q/analyticsvisits:
@@ -2730,6 +2730,125 @@ paths:
             responses:
                 "200":
                     description: 'Depends on the kind of source. Camera: {"kind":"objects","rows":[{object, label, start, end}]}. Zone: {"kind":"zonevisits","rows":[{object, label, enter, seconds, from (source id of the zone it came from, 0 = none)}]}. Trip wire: {"kind":"linecrossings","rows":[{object, label, time, direction (left or right; right is the direction of the arrow drawn on the wire), tailgating}]}. Times are Unix milliseconds, UTC. Individual records are kept for the retention period set in the analytics settings (90 days by default); totals are kept permanently. v8.1.1.0+'
+            tags:
+            - Analytics
+    /q/analyticsflow:
+        get:
+            summary: How objects moved between zones
+            operationId: /q/analyticsflow
+            parameters:
+            - description: Comma separated zone source ids from analyticssources (up to 2000)
+              in: query
+              name: sources
+              required: true
+              type: string
+            - description: Start of the range, Unix milliseconds UTC. Default 24 hours before to
+              in: query
+              name: from
+              required: false
+              type: integer
+            - description: End of the range, Unix milliseconds UTC. Default now
+              in: query
+              name: to
+              required: false
+              type: integer
+            - description: Only this object class, e.g. person. Default every class
+              in: query
+              name: label
+              required: false
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"from", "to", "flows":[{"from": source id of the zone the objects came from (0 = from outside every zone, or they had just appeared), "to": source id of the zone they entered, "count"}]}, most frequent first. Counts stays in the entered zone that began in the range. Worked out from the individual zone visits, so only within the retention period. v8.1.1.0+'
+            tags:
+            - Analytics
+    /q/analyticsheat:
+        get:
+            summary: Heatmap of where objects stood on one camera
+            operationId: /q/analyticsheat
+            parameters:
+            - description: Camera source id from analyticssources
+              in: query
+              name: source
+              required: true
+              type: integer
+            - description: Start of the range, Unix milliseconds UTC. Default 24 hours before to
+              in: query
+              name: from
+              required: false
+              type: integer
+            - description: End of the range, Unix milliseconds UTC. Default now
+              in: query
+              name: to
+              required: false
+              type: integer
+            - description: Only this object class, e.g. person. Default every class
+              in: query
+              name: label
+              required: false
+              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"cols", "rows", "cells":[[index, seconds],...], "max", "seconds"}. The picture is divided into cols x rows cells; index = row * cols + column, and seconds is how long objects stood with their foot point (bottom centre of the detection) in that cell. Empty cells are left out. max is the highest cell, seconds the total. Stored by the hour, so from and to are widened to whole hours; kept for the retention period. v8.1.1.0+'
+            tags:
+            - Analytics
+    /q/analyticslive:
+        get:
+            summary: Who is in view right now on each camera with analytics enabled
+            operationId: /q/analyticslive
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"time", "cameras":[{"oid", "cameraIdent", "running", "total", "zones":[{"zone" (zone number; 0 = no zones drawn, the whole view), "count", "labels":{class: count}}]}]}. Only zones with something in them are listed. Taken from the running counters, not the database. Also "counters":[{"id", "count", "in", "out"}] - each occupancy counter's count now, and how many have come in and gone out since its reset. v8.1.1.0+'
+            tags:
+            - Analytics
+    /q/analyticscounters:
+        get:
+            summary: The occupancy counters - people in a space, counted from the lines at its ways in and out
+            operationId: /q/analyticscounters
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"rev", "counters":[{"id", "name", "label" (count only this class; empty = all), "lines":[{"camera" (cameraIdent), "line" (the line''s "key" in analyticssources), "in" ("right" = crossing the way the arrow on the line points, Inward, is coming in; "left" = the other way is)}], "reset" (HH:mm, local: the count goes back to nothing), "capacity" (0 = none), "opentext", "fulltext", "rules":[{"id", "when" ("atleast" or "atmost"), "value", "hold" (seconds), "url"}]}], "classes" (the classes a counter can be limited to), "lines":[{"camera", "cameraName", "line", "number", "name"}] (every counting line the cameras have now)}. A counter adds one for a crossing in its "in" direction on any of its lines and takes one away for a crossing the other way, never going below nothing - so several cameras (one entrance, three exits) make one count. A rule calls its URL (GET) once when the count has been at or above / at or below its value for hold seconds, and again only after that has stopped being true; {count}, {capacity}, {free} and {name} in the URL are filled in. The running counts are in analyticslive. v8.1.1.0+'
+            tags:
+            - Analytics
+    /q/analyticscounterset:
+        get:
+            summary: Set an occupancy counter's count by hand
+            operationId: /q/analyticscounterset
+            parameters:
+                - name: id
+                  in: query
+                  description: The counter's id (from analyticscounters)
+                  required: true
+                  type: string
+                - name: value
+                  in: query
+                  description: The count to set
+                  required: true
+                  type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"id", "count"}, or {"error":"unknown counter"}. v8.1.1.0+'
+            tags:
+            - Analytics
+    /q/analyticsdashboards:
+        get:
+            summary: The saved analytics dashboards (shared by everyone who can see analytics on this server)
+            operationId: /q/analyticsdashboards
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"rev", "dashboards":[{"id", "name", "ctx", "reports":[{"id", "type", "title", "ctx"}]}]}. A dashboard is a named set of reports. ctx is what it covers: {"location" ("l:<location>" or "g:<group>", empty = everywhere), "camera" (cameraIdent, empty = all), "range" (today, yesterday, 7, 30 or custom with "from" / "to" as YYYY-MM-DD), "step" (auto, hour, day), "label", "compare"}; a report''s own ctx holds only a camera, when it shows a different one from its dashboard. type is one of summary, visitors, zones, flow, heatmap, lines. Saved by the web interface with the current rev; a save carrying an older rev is refused. v8.1.1.0+'
             tags:
             - Analytics
     /command/triggerRecord:
