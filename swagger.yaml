@@ -2818,6 +2818,60 @@ paths:
                     description: 'Returns {"rev", "counters":[{"id", "name", "label" (count only this class; empty = all), "lines":[{"camera" (cameraIdent), "line" (the line''s "key" in analyticssources), "in" ("right" = crossing the way the arrow on the line points, Inward, is coming in; "left" = the other way is)}], "reset" (HH:mm, local: the count goes back to nothing), "capacity" (0 = none), "opentext", "fulltext", "rules":[{"id", "when" ("atleast" or "atmost"), "value", "hold" (seconds), "url"}]}], "classes" (the classes a counter can be limited to), "lines":[{"camera", "cameraName", "line", "number", "name"}] (every counting line the cameras have now)}. A counter adds one for a crossing in its "in" direction on any of its lines and takes one away for a crossing the other way, never going below nothing - so several cameras (one entrance, three exits) make one count. A rule calls its URL (GET) once when the count has been at or above / at or below its value for hold seconds, and again only after that has stopped being true; {count}, {capacity}, {free} and {name} in the URL are filled in. The running counts are in analyticslive. v8.1.1.0+'
             tags:
             - Analytics
+    /q/analyticscounterhistory:
+        get:
+            summary: An occupancy counter's count over time
+            operationId: /q/analyticscounterhistory
+            parameters:
+                - name: id
+                  in: query
+                  description: The counter's id (from analyticscounters)
+                  required: true
+                  type: string
+                - name: from
+                  in: query
+                  description: Start of the range, Unix milliseconds UTC (default 24 hours before to)
+                  type: integer
+                - name: to
+                  in: query
+                  description: End of the range, Unix milliseconds UTC (default now)
+                  type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"id", "bucket" (300000: the length of a piece in ms), "from", "to", "start" (the count going into the range), "points":[[time, peak, value],...]}. One point per five minutes in which the count changed: the highest it was changed to in them, and what it was at the end. Nothing is written while the count stays the same, so carry the last value forward over the gaps. Kept for the retention period. v8.1.1.0+'
+            tags:
+            - Analytics
+    /q/analyticsdwell:
+        get:
+            summary: How long objects stayed on camera, in bands
+            operationId: /q/analyticsdwell
+            parameters:
+                - name: sources
+                  in: query
+                  description: Comma separated camera source ids (from analyticssources)
+                  required: true
+                  type: string
+                - name: from
+                  in: query
+                  description: Start of the range, Unix milliseconds UTC (default 24 hours before to)
+                  type: integer
+                - name: to
+                  in: query
+                  description: End of the range, Unix milliseconds UTC (default now)
+                  type: integer
+                - name: label
+                  in: query
+                  description: Only this class of object (default all)
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"edges":[10,30,60,120,300,900], "counts":[n x 7]}. counts[i] is how many objects that appeared in the range stayed in view for under edges[i] seconds (and at least edges[i-1]); the last count is everything longer than the last edge. From the individual visits, so within the retention period. v8.1.1.0+'
+            tags:
+            - Analytics
     /q/analyticscounterset:
         get:
             summary: Set an occupancy counter's count by hand
