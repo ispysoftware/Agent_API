@@ -2697,7 +2697,7 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: 'Returns {"step", "from", "to", "tz", "queue", "series":[{"source": id, "label": class, "metric": name, "points":[[time, value],...]}]}. Each point is the start of a step (Unix milliseconds, UTC) and its total; steps with nothing in them are left out. Counts and seconds add up across a day; zonemaxcount, zonequeue and objectsmax take the day''s highest. queue is the number of seconds an object has to have been in a zone to count towards zonequeue. Average dwell in a zone = zoneseconds / zoneentries. from is moved later if the range is longer than the step allows. v8.1.1.0+'
+                    description: 'Returns {"step", "from", "to", "tz", "queue", "series":[{"source": id, "label": class, "metric": name, "points":[[time, value],...]}]}. Each point is the start of a step (Unix milliseconds, UTC) and its total; steps with nothing in them are left out. Counts and seconds add up across a day; zonemaxcount, zonequeue and objectsmax take the day''s highest. queue is the number of seconds an object has to have been in a zone to count towards zonequeue. A visit to a zone is counted in zoneentries when it begins and its time in zoneseconds when it ends, so zoneseconds / zoneentries is the average dwell only once the zone is empty; while objects are still in it, leave them out of the visits (analyticslive says how many there are). from is moved later if the range is longer than the step allows. v8.1.1.0+'
             tags:
             - Analytics
     /q/analyticsvisits:
