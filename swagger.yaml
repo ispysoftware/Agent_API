@@ -3006,7 +3006,7 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: 'Sends the alert''s notification and emails and calls its URLs, marked as a test, and adds it to the log. Returns {"sent":true} or {"error":"unknown alert"}. v8.1.1.0+'
+                    description: 'Sends the alert''s notification and emails and calls its URLs, marked as a test, and adds it to the log. Returns {"sent":true} or {"error":"unknown alert"}. To try an alert that is not stored (or not as it is stored), POST /savejson {"name":"testanalyticsalert","alert":{...}} - nothing is stored; {"sent":true} or {"error":"invalid"}. v8.1.1.0+'
             tags:
             - Analytics
     /q/analyticsclear:
