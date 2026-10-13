@@ -2855,7 +2855,7 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: 'Returns {"rev", "counters":[{"id", "name", "labels" (count only these classes; none = all), "lines":[{"camera" (cameraIdent), "line" (the line''s "key" in analyticssources), "in" ("right" = crossing the way the arrow on the line points, Inward, is coming in; "left" = the other way is)}], "reset" (HH:mm, local: the count goes back to nothing), "capacity" (0 = none), "opentext", "fulltext", "rules":[{"id", "when" ("atleast" or "atmost"), "value", "hold" (seconds), "url"}]}], "classes" (the classes a counter can be limited to), "lines":[{"camera", "cameraName", "line", "number", "name", "x", "y", "x2", "y2"}] (every counting line the cameras have now; end points as percentages of the picture, in the order drawn - the inward direction is to the right of first-to-second), "cameras":[{"camera", "zonemap" (64 x 48 cells, column by column: column x, row y is character x * 48 + y; one digit each, 0 = no zone, 1-9 = that zone; empty = none drawn), "zones":[{"number", "name"}]}]}. A counter adds one for a crossing in its "in" direction on any of its lines and takes one away for a crossing the other way, never going below nothing - so several cameras (one entrance, three exits) make one count. A rule calls its URL (GET) once when the count has been at or above / at or below its value for hold seconds, and again only after that has stopped being true; {count}, {capacity}, {free} and {name} in the URL are filled in. The running counts are in analyticslive. v8.1.1.0+'
+                    description: 'Returns {"rev", "counters":[{"id", "name", "labels" (count only these classes; none = all), "lines":[{"camera" (cameraIdent), "line" (the line''s "key" in analyticssources), "in" ("right" = crossing the way the arrow on the line points, Inward, is coming in; "left" = the other way is)}], "reset" (HH:mm, local: the count goes back to nothing), "capacity" (0 = none), "opentext", "fulltext", "rules":[{"id", "when" ("atleast" or "atmost"), "value", "hold" (seconds), "url"}]}], "classes" (the classes a counter can be limited to), "lines":[{"camera", "cameraName", "line", "number", "name", "x", "y", "x2", "y2"}] (every counting line the cameras have now; end points as percentages of the picture, in the order drawn - the inward direction is to the right of first-to-second), "cameras":[{"camera", "cameraName", "oid" (the camera''s object id), "zonemap" (64 x 48 cells, column by column: column x, row y is character x * 48 + y; one digit each, 0 = no zone, 1-9 = that zone; empty = none drawn), "zones":[{"number", "name"}]}]}. A counter adds one for a crossing in its "in" direction on any of its lines and takes one away for a crossing the other way, never going below nothing - so several cameras (one entrance, three exits) make one count. A rule calls its URL (GET) once when the count has been at or above / at or below its value for hold seconds, and again only after that has stopped being true; {count}, {capacity}, {free} and {name} in the URL are filled in. The running counts are in analyticslive. v8.1.1.0+'
             tags:
             - Analytics
     /q/analyticscounterhistory:
@@ -3096,6 +3096,100 @@ paths:
             responses:
                 "200":
                     description: 'Sends the alert''s notification and emails and calls its URLs, marked as a test, and adds it to the log. Returns {"sent":true} or {"error":"unknown alert"}. To try an alert that is not stored (or not as it is stored), POST /savejson {"name":"testanalyticsalert","alert":{...}} - nothing is stored; {"sent":true} or {"error":"invalid"}. v8.1.1.0+'
+            tags:
+            - Analytics
+    /q/analyticsalertadd:
+        post:
+            summary: Add one analytics alert to those there are
+            operationId: /q/analyticsalertadd
+            consumes:
+                - application/json
+            parameters:
+            - in: body
+              name: body
+              required: true
+              description: 'The alert as analyticsalerts gives it, without an id (one is made): {"name", "type", "camera", "source", "counter", "direction", "when", "value", "hold", "cooldown", "from", "to", "labels", "actions"}. A zone''s "source" is z<number> (z1...), or all for a camera with no zones drawn; a line''s is its key from analyticscounters "lines".'
+              schema:
+                  type: object
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"rev", "alert": the alert as stored, with its id}, or {"error":"invalid"} (no name, not one of the types, or about nothing), {"error":"unknown counter"} (the occupancy counter or speed measurement it names is not there), {"error":"toomany"} (100 alerts) or {"error":"notsaved"}. The alerts already there are left as they are - for a caller that would rather not send the whole list back with its revision. v8.1.1.0+'
+            tags:
+            - Analytics
+    /q/analyticscounteradd:
+        post:
+            summary: Add one occupancy counter to those there are
+            operationId: /q/analyticscounteradd
+            consumes:
+                - application/json
+            parameters:
+            - in: body
+              name: body
+              required: true
+              description: 'The counter as analyticscounters gives it, without an id (one is made): {"name", "lines":[{"camera", "line", "in"}], "labels", "capacity", "reset", "opentext", "fulltext", "rules"}. "camera" is the cameraIdent and "line" the line''s key, both from analyticscounters "lines"; "in" is right (crossing the way the line''s arrow points is coming in) or left.'
+              schema:
+                  type: object
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"rev", "counter": the counter as stored, with its id}, or {"error":"invalid"} (no name), {"error":"invalid lines"} (no lines, or one that is unusable or listed twice), {"error":"toomany"} (50 counters) or {"error":"notsaved"}. It starts at nothing; the counters already there keep their counts. v8.1.1.0+'
+            tags:
+            - Analytics
+    /q/analyticsspeedadd:
+        post:
+            summary: Add one speed measurement to those there are
+            operationId: /q/analyticsspeedadd
+            consumes:
+                - application/json
+            parameters:
+            - in: body
+              name: body
+              required: true
+              description: 'The measurement as analyticscounters gives it under "traps", without an id (one is made): {"name", "camera", "first", "second", "distance"}. "camera" is the cameraIdent, "first" and "second" the keys of two different lines on it (from analyticscounters "lines"), "distance" how far apart they are on the ground in metres (0.1 to 10000).'
+              schema:
+                  type: object
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"rev", "trap": the measurement as stored, with its id}, or {"error":"invalid"} (no name or camera, the same line twice, or no usable distance), {"error":"toomany"} (50 measurements) or {"error":"notsaved"}. The counters and measurements already there are left as they are. v8.1.1.0+'
+            tags:
+            - Analytics
+    /q/analyticscounterdelete:
+        get:
+            summary: Remove an occupancy counter or a speed measurement
+            operationId: /q/analyticscounterdelete
+            parameters:
+                - name: id
+                  in: query
+                  description: The counter's or the speed measurement's id (from analyticscounters)
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"rev", "id", "deleted": "counter" or "speed"}, or {"error":"unknown counter"} / {"error":"notsaved"}. The others keep their counts. What it counted or timed stays in the history; an alert about it is not removed, and never comes true again. v8.1.1.0+'
+            tags:
+            - Analytics
+    /q/analyticsalertdelete:
+        get:
+            summary: Remove an analytics alert
+            operationId: /q/analyticsalertdelete
+            parameters:
+                - name: id
+                  in: query
+                  description: The alert's id (from analyticsalerts)
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"rev", "id", "deleted": true}, or {"error":"unknown alert"} / {"error":"notsaved"}. The other alerts carry on as they were; what it raised stays in the log. v8.1.1.0+'
             tags:
             - Analytics
     /q/analyticsclear:
