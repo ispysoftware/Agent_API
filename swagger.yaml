@@ -3010,7 +3010,24 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: 'Sent through Agent''s mail settings to the addresses saved with the dashboard (its "email" "to"); the API cannot name others. The email holds the figures of the dashboard''s reports; the kinds that are a picture of a camera (heatmap, paths, live view) or about this moment (zone count) are left out. A dashboard with "email":{"every":"daily"|"weekly","to":".."} is sent by itself just after midnight (weekly: on Monday). Returns {"sent":true,"to"}, or {"error":"unknown dashboard"} / {"error":"no address"} / {"error":"not sent","to": the addresses it could not be sent to}. v8.1.1.0+'
+                    description: 'Sent through Agent''s mail settings to the addresses saved with the dashboard (its "email" "to"); the API cannot name others. The email holds the figures of the dashboard''s reports; a heatmap or paths is a picture in the body, drawn over the camera''s reference image (see analyticsreference); the kinds about this moment (live view, in zone now) are left out. A dashboard with "email":{"every":"daily"|"weekly","to":".."} is sent by itself just after midnight (weekly: on Monday). Returns {"sent":true,"to"}, or {"error":"unknown dashboard"} / {"error":"no address"} / {"error":"not sent","to": the addresses it could not be sent to}. v8.1.1.0+'
+            tags:
+            - Analytics
+    /q/analyticsreference:
+        get:
+            summary: A camera's reference image - what its heatmaps and paths are drawn over when there is no live picture
+            operationId: /q/analyticsreference
+            parameters:
+                - name: ident
+                  in: query
+                  description: The camera's cameraIdent (from analyticssources)
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"taken": Unix milliseconds (0 = the camera has none), "image": "data:image/jpeg;base64,..." ("" = none)}. One still of what the camera looks at, at most 960 pixels wide. Heatmaps and paths are drawn over it in emailed reports (sent when the scene may be dark or the camera off) and on the Analytics page for a camera that is offline or a period that is over. It is taken by itself from the first frame that isn''t dark after analytics is switched on for the camera, and again from the Update button in the camera''s analytics settings. v8.1.1.0+'
             tags:
             - Analytics
     /q/analyticsalerts:
