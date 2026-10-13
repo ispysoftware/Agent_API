@@ -2934,6 +2934,38 @@ paths:
                     description: 'Returns {"edges":[10,30,60,120,300,900], "counts":[n x 7]}. counts[i] is how many objects that appeared in the range stayed in view for under edges[i] seconds (and at least edges[i-1]); the last count is everything longer than the last edge. From the individual visits, so within the retention period. v8.1.1.0+'
             tags:
             - Analytics
+    /q/analyticszonedwell:
+        get:
+            summary: How long visits to zones lasted - their spread, average and median
+            operationId: /q/analyticszonedwell
+            parameters:
+                - name: sources
+                  in: query
+                  description: Zone source ids (from analyticssources), comma separated
+                  required: true
+                  type: string
+                - name: from
+                  in: query
+                  description: Start of the range, Unix milliseconds
+                  required: false
+                  type: integer
+                - name: to
+                  in: query
+                  description: End of the range, Unix milliseconds
+                  required: false
+                  type: integer
+                - name: label
+                  in: query
+                  description: Only this class of object (person, car...)
+                  required: false
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"edges":[10,30,60,120,300,900], "zones":[{"source", "visits", "average", "median", "counts":[n x 7]}]}. For each zone asked for: its visits that began in the range and have ended, their average and median length in seconds, and how many fell in each band - counts[i] = under edges[i] seconds and at least edges[i-1]; the last is everything longer. From the individual visits, so within the retention period. v8.1.1.0+'
+            tags:
+            - Analytics
     /q/analyticscounterset:
         get:
             summary: Set an occupancy counter's count by hand
@@ -2989,7 +3021,7 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: 'Returns {"rev", "alerts":[{"id", "name", "enabled", "type", "camera", "source", "counter", "direction", "when", "value", "hold", "cooldown", "labels", "actions"}], "log":[{"time" (ms), "id", "name", "text"}]}. "type" is zonecount (objects in a zone), queue (objects waiting in a zone), dwell (one object in a zone for more than "value" seconds), line (a line crossed; "direction" in / out / any, in = the way its arrow points), tailgating (a line crossed close behind another object), occupancy (an occupancy counter) or speed (a speed measurement; "value" in the unit speeds are shown in). A rule about a zone or line names its camera ("camera": cameraIdent) and the zone''s or line''s "key" from analyticssources ("source"); one about a counter or a speed measurement names its id ("counter"). "when" is atleast or atmost. zonecount, queue and occupancy run once when the condition has held for "hold" seconds and not again until it has stopped being true; the others run each time, at most once every "cooldown" seconds. "labels": only these classes (none = all). "actions": {"type":"notify"} (a notification to admins in the web UI), {"type":"email","to"} and {"type":"url","url"} (a GET; {name}, {value}, {source} and {text} are filled in). "log" is the alerts there have been, newest first (the last 200). Nothing to do with the cameras'' alerts and actions. Saved with POST /savejson {"name":"saveanalyticsalerts","rev","alerts"} - the reply is the stored document, or {"error":"conflict", ...} if someone else saved first. v8.1.1.0+'
+                    description: 'Returns {"rev", "alerts":[{"id", "name", "enabled", "type", "camera", "source", "counter", "direction", "when", "value", "hold", "cooldown", "from", "to", "labels", "actions"}], "log":[{"time" (ms), "id", "name", "text"}]}. "type" is zonecount (objects in a zone), queue (objects waiting in a zone), dwell (one object in a zone for more than "value" seconds), line (a line crossed; "direction" in / out / any, in = the way its arrow points), tailgating (a line crossed close behind another object), occupancy (an occupancy counter) or speed (a speed measurement; "value" in the unit speeds are shown in). A rule about a zone or line names its camera ("camera": cameraIdent) and the zone''s or line''s "key" from analyticssources ("source"); one about a counter or a speed measurement names its id ("counter"). "when" is atleast or atmost. zonecount, queue and occupancy run once when the condition has held for "hold" seconds and not again until it has stopped being true; the others run each time, at most once every "cooldown" seconds. "labels": only these classes (none = all). "from" and "to": the hours the alert is in force, "HH:mm" in the server's local time ("to" may be the next morning; both "" = all day). "actions": {"type":"notify"} (a notification to admins in the web UI), {"type":"email","to"} and {"type":"url","url"} (a GET; {name}, {value}, {source} and {text} are filled in). "log" is the alerts there have been, newest first (the last 200). Nothing to do with the cameras'' alerts and actions. Saved with POST /savejson {"name":"saveanalyticsalerts","rev","alerts"} - the reply is the stored document, or {"error":"conflict", ...} if someone else saved first. v8.1.1.0+'
             tags:
             - Analytics
     /q/analyticsalerttest:
