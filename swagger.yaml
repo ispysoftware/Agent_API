@@ -1421,6 +1421,46 @@ paths:
                     description: 'Returns {"status":"ok","ai":"object","mode":"detected"}. v8.0.9.0+'
             tags:
             - Commands
+    /command/setconfidence:
+        get:
+            summary: Set the minimum confidence for an AI feature on a camera (the Confidence slider on its tab)
+            operationId: /command/setconfidence
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            - description: Which feature
+              enum:
+              - object
+              - face
+              - lpr
+              in: query
+              name: type
+              required: true
+              type: string
+            - description: Minimum confidence, 0-100 (lower = more results)
+              in: query
+              name: confidence
+              required: true
+              type: integer
+              minimum: 0
+              maximum: 100
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"status":"ok","type":"object","from":60,"to":40}. v8.1.1.0+'
+            tags:
+            - Commands
     /command/say:
         get:
             summary: Speak text through a camera's speaker now
@@ -3453,7 +3493,7 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: Apply the specified profile with an index.
+                    description: Apply the specified profile with an index. From v8.1.1.0 a profile also restores each camera's object detection confidence (profiles saved earlier leave it unchanged until re-saved).
             tags:
             - Commands
     /command/setProfileByName:
