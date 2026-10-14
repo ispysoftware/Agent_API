@@ -3158,6 +3158,46 @@ paths:
                     description: 'Returns {"rev", "trap": the measurement as stored, with its id}, or {"error":"invalid"} (no name or camera, the same line twice, or no usable distance), {"error":"toomany"} (50 measurements) or {"error":"notsaved"}. The counters and measurements already there are left as they are. v8.1.1.0+'
             tags:
             - Analytics
+    /q/analyticscounterupdate:
+        post:
+            summary: Change one occupancy counter or speed measurement
+            operationId: /q/analyticscounterupdate
+            consumes:
+                - application/json
+            parameters:
+            - in: body
+              name: body
+              required: true
+              description: '{"id": the counter''s or the speed measurement''s id (from analyticscounters), ...only the fields that are to be different}, with the fields as analyticscounters gives them. Everything the body does not mention stays as it is stored. "lines", when given, is the whole new list for the counter.'
+              schema:
+                  type: object
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"rev", "counter"} or {"rev", "trap"} as stored, or {"error":"unknown counter"}, {"error":"invalid"} (what it would become is not usable), {"error":"invalid lines"} (a counter given no lines, or one that is unusable or listed twice) or {"error":"notsaved"}. A counter keeps its count; the others are left as they are. v8.1.1.0+'
+            tags:
+            - Analytics
+    /q/analyticsalertupdate:
+        post:
+            summary: Change one analytics alert
+            operationId: /q/analyticsalertupdate
+            consumes:
+                - application/json
+            parameters:
+            - in: body
+              name: body
+              required: true
+              description: '{"id": the alert''s id (from analyticsalerts), ...only the fields that are to be different}, with the fields as analyticsalerts gives them - {"id","enabled":false} switches one off. Everything the body does not mention stays as it is stored. "actions" and "labels", when given, are the whole new lists.'
+              schema:
+                  type: object
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"rev", "alert": the alert as stored}, or {"error":"unknown alert"}, {"error":"invalid"} (what it would become is not usable), {"error":"unknown counter"} (the occupancy counter or speed measurement it would be about is not there) or {"error":"notsaved"}. The other alerts carry on as they were. v8.1.1.0+'
+            tags:
+            - Analytics
     /q/analyticscounterdelete:
         get:
             summary: Remove an occupancy counter or a speed measurement
