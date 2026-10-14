@@ -3257,7 +3257,121 @@ paths:
                     description: 'Returns {"cleared": rows removed}, or {"error":"unknown source"} / {"error":"unknown what"}. v8.1.1.0+'
             tags:
             - Analytics
-    /q/analyticsdashboards:
+    /q/analyticssales:
+        get:
+            summary: The sales figures set beside the visitors, for conversion
+            operationId: /q/analyticssales
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"rev", "sets":[{"id", "name", "unit" (its currency as written, e.g. £ or USD), "step" (day or hour: what each of its figures covers), "rows" (how many), "first", "last" (the first and last day or hour it has figures for)}]}. The figures themselves are in analyticssalesdata. Typed in or imported in the web interface (Analytics - Sales), or sent with analyticssalesadd. v8.1.1.0+'
+            tags:
+            - Analytics
+    /q/analyticssalesdata:
+        get:
+            summary: One sales set's figures
+            operationId: /q/analyticssalesdata
+            parameters:
+                - name: id
+                  in: query
+                  description: The set's id or name
+                  required: true
+                  type: string
+                - name: from
+                  in: query
+                  description: The first day (YYYY-MM-DD) or hour (YYYY-MM-DDTHH), local - default from the start
+                  type: string
+                - name: to
+                  in: query
+                  description: The last day or hour, included (a day takes in all its hours) - default to the end
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"id", "name", "unit", "step", "rows":[[day or hour, amount, transactions],...]} in time order; a figure that wasn''t given is null. Or {"error":"unknown sales"}. v8.1.1.0+'
+            tags:
+            - Analytics
+    /q/analyticsconversion:
+        get:
+            summary: Visitors set against a set of sales figures
+            operationId: /q/analyticsconversion
+            parameters:
+                - name: id
+                  in: query
+                  description: The sales set's id or name
+                  required: true
+                  type: string
+                - name: sources
+                  in: query
+                  description: The source ids of the counting lines people come in by, comma separated (from analyticssources). Visitors are their crossings in the direction of their arrows (Inward)
+                  required: true
+                  type: string
+                - name: from
+                  in: query
+                  description: Start of the range, Unix milliseconds UTC (default 24 hours before to)
+                  type: integer
+                - name: to
+                  in: query
+                  description: End of the range, Unix milliseconds UTC (default now)
+                  type: integer
+                - name: step
+                  in: query
+                  description: day or hour (default hour for two days or less, else day). Figures kept by the day are always by the day
+                  type: string
+                - name: tz
+                  in: query
+                  description: Minutes east of UTC, for where a day starts (default the server's)
+                  type: integer
+                - name: label
+                  in: query
+                  description: The class counted as visitors, e.g. person (default every class)
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"id", "name", "unit", "step", "from", "to", "tz", "whole" (its amounts are whole numbers), "visitors", "amount", "transactions" (null when none were given for the period), "perVisitor", "rate" (transactions over visitors: 0.25 = a quarter of them bought something), "points":[[ms, visitors, amount, transactions],...]}. The amount and the transactions are set against the visitors on the days there are figures for only - a day not filled in yet is not a day nobody bought anything. Or {"error":"unknown sales"}. v8.1.1.0+'
+            tags:
+            - Analytics
+    /q/analyticssalesadd:
+        post:
+            summary: Add or change sales figures (a till system's daily takings, say)
+            operationId: /q/analyticssalesadd
+            consumes:
+                - application/json
+            parameters:
+            - in: body
+              name: body
+              required: true
+              description: '{"set": the set''s id or name, "rows":[{"date": "2026-10-14", "amount": 1234.5, "transactions": 87},...]}. date (or time) is YYYY-MM-DD, YYYY-MM-DD HH:mm, ISO 8601 (with a time zone it is turned into the server''s local time) or Unix milliseconds; a row may also be [date, amount, transactions]. Either figure may be left out; a row with neither deletes that day or hour. Rows for the same day or hour - or the hours of one day, in a set kept by the day - are added together, and replace what was there. A set named that doesn''t exist is made, kept by "step" (day or hour; default what the first row says) in "unit" (its currency).'
+              schema:
+                  type: object
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"rev", "id" (the set''s), "saved", "deleted", "skipped" (rows that were not usable: not a date, a day in a set kept by the hour, a figure that isn''t a number)}, or {"error":"invalid"} / {"error":"toomany"} (50 sets) / {"error":"notsaved"}. v8.1.1.0+'
+            tags:
+            - Analytics
+    /q/analyticssalesdelete:
+        get:
+            summary: Delete a sales set and all its figures
+            operationId: /q/analyticssalesdelete
+            parameters:
+                - name: id
+                  in: query
+                  description: The set's id or name
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: 'Returns {"rev", "id", "deleted": true}, or {"error":"unknown sales"} / {"error":"notsaved"}. It cannot be undone; a conversion report that used it has nothing to show. v8.1.1.0+'
+            tags:
+            - Analytics    /q/analyticsdashboards:
         get:
             summary: The saved analytics dashboards (shared by everyone who can see analytics on this server)
             operationId: /q/analyticsdashboards
@@ -3265,7 +3379,7 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: 'Returns {"rev", "dashboards":[{"id", "name", "ctx", "reports":[{"id", "type", "title", "ctx"}]}]}. A dashboard is a named set of reports. ctx is what it covers: {"location" ("l:<location>" or "g:<group>", empty = everywhere), "camera" (cameraIdent, empty = all), "range" (today, yesterday, 7, 30 or custom with "from" / "to" as YYYY-MM-DD), "step" (auto, hour, day), "label", "compare"}; a report''s own ctx holds only a camera, when it shows a different one from its dashboard. type is one of summary, visitors, zones, flow, heatmap, lines. Saved by the web interface with the current rev; a save carrying an older rev is refused. v8.1.1.0+'
+                    description: 'Returns {"rev", "dashboards":[{"id", "name", "ctx", "reports":[{"id", "type", "title", "ctx"}]}]}. A dashboard is a named set of reports. ctx is what it covers: {"location" ("l:<location>" or "g:<group>", empty = everywhere), "camera" (cameraIdent, empty = all), "range" (1h = the last hour, today, yesterday, week = Monday to now, 7, month = the 1st to now, 30, or custom with "from" / "to" as YYYY-MM-DD), "step" (auto, 15m, hour, day), "label", "compare" (0-3 periods before)}; a report''s own ctx holds its camera, when it is about one, and - when it has a period of its own instead of the dashboard''s - its "range" ("from" / "to" for a custom one), "step" and "compare". The class ("label") is always the dashboard''s. How a report is drawn: "chart" ("line" for lines instead of bars: lines, zones, queue, occupancyhistory, speed), "hours" ({"from","to"} whole hours, busy only: its opening hours) and "scale" ("log" for a logarithmic scale: heatmap only) - the email follows them too. type is one of count, zonenow, lines, zones, dwell, queue, busy, flow, heatmap, live, paths, occupancy, occupancyhistory, speed, conversion. A conversion report has "sales" (a sales set''s id, from analyticssales), "sources" (its counting lines) and "who" (the class counted as visitors; none = every class). Saved by the web interface with the current rev; a save carrying an older rev is refused. v8.1.1.0+'
             tags:
             - Analytics
     /command/triggerRecord:
