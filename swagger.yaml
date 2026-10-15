@@ -3371,7 +3371,8 @@ paths:
                 "200":
                     description: 'Returns {"rev", "id", "deleted": true}, or {"error":"unknown sales"} / {"error":"notsaved"}. It cannot be undone; a conversion report that used it has nothing to show. v8.1.1.0+'
             tags:
-            - Analytics    /q/analyticsdashboards:
+            - Analytics
+    /q/analyticsdashboards:
         get:
             summary: The saved analytics dashboards (shared by everyone who can see analytics on this server)
             operationId: /q/analyticsdashboards
