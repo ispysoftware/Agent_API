@@ -1238,7 +1238,7 @@ paths:
                 - application/json
             responses:
                 "200":
-                    description: 'Returns server status JSON: armed state, device count, active device count, number of devices recording, remote access status, unique server ID, machine name, version and server timestamp. v8.2.1.0+ also alertsUnread (unread alerts, as the web UI badges them) and lastAlertId (id of the newest alert; a higher value means a new alert) - both -1 until the server has loaded them.'
+                    description: 'Returns server status JSON: armed state, device count, active device count, number of devices recording, remote access status, unique server ID, machine name, version and server timestamp. v8.2.1.0+ also alertsUnread (unread alerts, as the web UI badges them) and lastAlertId (id of the newest alert; a higher value means a new alert) - both -1 until the server has loaded them; devicesInError (devices switched on but failing to connect) and updateVersion (the newer Agent version available, or empty when up to date).'
             tags: 
             - Commands
     /command/getSystemStats:
