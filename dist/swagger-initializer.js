@@ -11,7 +11,7 @@ window.onload = function() {
       SwaggerUIStandalonePreset
     ],
     plugins: [
-      SwaggerUIBundle.plugins.DownloadUrl
+      SwaggerUIBundle.plugins.DownloadUrl, NoVirtualOps
     ],
     layout: "StandaloneLayout"
   });

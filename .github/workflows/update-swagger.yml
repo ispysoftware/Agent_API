@@ -43,6 +43,12 @@ jobs:
           sed -i "s|href=\"./|href=\"dist/|g" index.html
           sed -i "s|src=\"./|src=\"dist/|g" index.html
           sed -i "s|href=\"index|href=\"dist/index|g" index.html
+          # Re-add the no-virtual-ops.js plugin (keeps every operation in the DOM so
+          # find-in-page works); fail rather than PR an update that dropped it
+          sed -i "s|^\(\s*\)<script src=\"dist/swagger-initializer.js\"|\1<script src=\"no-virtual-ops.js\" charset=\"UTF-8\"> </script>\n\1<script src=\"dist/swagger-initializer.js\"|" index.html
+          sed -i "s|SwaggerUIBundle.plugins.DownloadUrl$|SwaggerUIBundle.plugins.DownloadUrl, NoVirtualOps|" dist/swagger-initializer.js
+          grep -q 'no-virtual-ops.js' index.html
+          grep -q 'NoVirtualOps' dist/swagger-initializer.js
           # Update current release
           echo ${{ steps.swagger-ui.outputs.release_tag }} > swagger-ui.version
 

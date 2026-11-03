@@ -501,7 +501,57 @@ paths:
             responses:
                 "200":
                     description: Turn alerts on for the device.
-            tags: 
+            tags:
+            - Commands
+    /command/alertsOff:
+        get:
+            summary: Turn alerts off for the device and publish the MQTT state.
+            operationId: /command/alertsOff
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Same as alertOff, but also publishes the device's "alertsarmed" state over MQTT when MQTT push is on for the device. Used by the Home Assistant Alerts switch.
+            tags:
+            - Commands
+    /command/alertsOn:
+        get:
+            summary: Turn alerts on for the device and publish the MQTT state.
+            operationId: /command/alertsOn
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Same as alertOn, but also publishes the device's "alertsarmed" state over MQTT when MQTT push is on for the device. Used by the Home Assistant Alerts switch.
+            tags:
             - Commands
     /command/allOff:
         get:
@@ -968,7 +1018,7 @@ paths:
             - Commands
     /command/detect:
         get:
-            summary: Trigger detection for the device.
+            summary: Trigger motion (or sound) detection on the device.
             operationId: /command/detect
             parameters:
             - description: Object ID
@@ -989,6 +1039,56 @@ paths:
             responses:
                 "200":
                     description: Triggers the device's detector as if motion or sound was detected, running any detection-based actions and recording.
+            tags:
+            - Commands
+    /command/detectorOff:
+        get:
+            summary: Turn the motion (or sound) detector off for the device.
+            operationId: /command/detectorOff
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Disables the device's motion (camera) or sound (microphone) detector. Publishes the "detectorenabled" state over MQTT when MQTT push is on for the device.
+            tags:
+            - Commands
+    /command/detectorOn:
+        get:
+            summary: Turn the motion (or sound) detector on for the device.
+            operationId: /command/detectorOn
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 1
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Enables the device's motion (camera) or sound (microphone) detector. Publishes the "detectorenabled" state over MQTT when MQTT push is on for the device.
             tags:
             - Commands
     /command/disarm:
@@ -3563,7 +3663,31 @@ paths:
             responses:
                 "200":
                     description: Reloads the device list (cameras and microphones) from the configuration and tells all connected clients to refresh.
-            tags: 
+            tags:
+            - Commands
+    /command/resetTripWires:
+        get:
+            summary: Reset the trip wire crossing counters on a camera.
+            operationId: /command/resetTripWires
+            parameters:
+            - description: Object ID
+              in: query
+              name: oid
+              required: true
+              type: integer
+            - description: Object TypeID
+              enum:
+              - 2
+              in: query
+              name: ot
+              required: true
+              type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Zeroes the trip wire crossing counters. Does nothing unless the camera is running the Trip Wires detector. (v8.0.2.0+)
+            tags:
             - Commands
     /command/restart:
         get:
